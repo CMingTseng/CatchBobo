@@ -1,0 +1,158 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RL001"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/snow">
+
+    <TextView
+        android:id="@+id/TVN001"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/TCBF001"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/TCBF001"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <c.min.tseng.Effect.MDigitalClock
+        android:id="@+id/TCBF002"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/TCBF001"
+        android:shadowColor="@android:color/white"
+        android:shadowRadius="2.0"
+        android:textColor="@color/black"
+        android:textSize="20sp">
+
+    </c.min.tseng.Effect.MDigitalClock>
+
+
+    <View
+        android:id="@+id/V001"
+        android:layout_width="1.0dip"
+        android:layout_height="fill_parent"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/BT001"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/V001"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/rectangleround"
+        android:text="@string/BT001" />
+
+    <Button
+        android:id="@+id/BT002"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/V001"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/rectangleround"
+        android:text="@string/BT002" />
+
+
+    <Button
+        android:id="@+id/BT003"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/V001"
+        android:layout_below="@+id/BT001"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/rectangleround"
+        android:text="@string/BT003" />
+
+    <Button
+        android:id="@+id/BT004"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/V001"
+        android:layout_below="@+id/BT002"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/rectangleround"
+        android:text="@string/BT004" />
+
+    <Button
+        android:id="@+id/BT005"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/V001"
+        android:layout_below="@+id/BT003"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/rectangleround"
+        android:text="@string/BT005" />
+
+    <Button
+        android:id="@+id/BT006"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/V001"
+        android:layout_below="@+id/BT004"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/rectangleround"
+        android:text="@string/BT006" />
+
+    <Button
+        android:id="@+id/BTA001"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/BT005"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/rectangleround"
+        android:text="@string/BTA001"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/CRLL0014"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/BT005"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <EditText
+            android:id="@+id/CRET0013"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:editable="false"
+            android:gravity="left|bottom"
+            android:hint="開班測試用帳號B001測試用密碼123456" />
+
+        <RelativeLayout
+            android:id="@+id/CRRL0011"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/CRET0014"
+                android:layout_width="260dp"
+                android:layout_height="wrap_content"
+                android:singleLine="true" />
+
+            <Button
+                android:id="@+id/CRBT008"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/CRET0014"
+                android:text="@string/BT008" />
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

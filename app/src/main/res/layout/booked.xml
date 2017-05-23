@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <LinearLayout
+        android:id="@+id/BLL001"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/BLL002"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10.0dip">
+
+        <TextView
+            android:id="@+id/BTV101"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.0"
+            android:text="@string/TV0021"
+            android:textAppearance="?android:textAppearanceLarge" />
+
+        <EditText
+            android:id="@+id/BET001"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:ems="10"
+            android:hint="@string/Hint1" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/BLL002"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/BLL003"
+        android:layout_centerHorizontal="true"
+        android:layout_alignLeft="@+id/BLL001"
+        android:layout_marginBottom="0.0dip">
+
+        <TextView
+            android:id="@+id/BTV102"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.0"
+            android:text="@string/TV0022"
+            android:textAppearance="?android:textAppearanceLarge" />
+
+        <EditText
+            android:id="@+id/BET002"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:ems="10"
+            android:hint="@string/Hint2"
+            android:inputType="textPassword" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/BIV001"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/BLL001"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/booked" />
+
+    <LinearLayout
+        android:id="@+id/BLL003"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
+
+        <Button
+            android:id="@+id/amainBT102"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/amainBT102"
+            android:layout_below="@+id/BTV102" />
+
+        <Button
+            android:id="@+id/amainBT101"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30.0dip"
+            android:text="@string/BT0029" />
+
+    </LinearLayout>
+
+</RelativeLayout>

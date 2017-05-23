@@ -1,0 +1,109 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RL001"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/antuquewhite"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <Spinner
+        android:id="@+id/SPCompany"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        android:background="@color/red"
+        android:prompt="@string/Hint0" />
+
+    <ImageView
+        android:id="@+id/IV001"
+        android:layout_marginTop="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/LL002"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/logo" />
+
+    <LinearLayout
+        android:id="@+id/LL002"
+        android:layout_above="@+id/LL003"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/TV0021"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/login_textview_marginleft"
+            android:text="@string/TV0021"
+            android:textColor="@color/black"
+            android:textSize="@dimen/login_textsize"
+            android:visibility="gone" />
+
+
+        <EditText
+            android:id="@+id/ET0021"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/login_edittext_marginleft"
+            android:layout_marginRight="@dimen/login_edittext_marginright"
+            android:hint="@string/Hint1"
+            android:singleLine="true"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/IMEI"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/cornflowerblue"
+            android:textColorHint="@color/black" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/LL003"
+        android:layout_above="@+id/BT0021"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/login_account_password_margintop">
+
+        <TextView
+            android:id="@+id/TV0022"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/login_textview_marginleft"
+            android:text="@string/TV0022"
+            android:textColor="@color/black"
+            android:textSize="@dimen/login_textsize"
+            android:visibility="gone" />
+
+        <EditText
+            android:id="@+id/ET0022"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/Hint2"
+            android:layout_marginLeft="@dimen/login_edittext_marginleft"
+            android:layout_marginRight="@dimen/login_edittext_marginright"
+            android:password="true"
+            android:visibility="gone"
+            android:singleLine="true" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/BT0021"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/login_loginbutton_height"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="right"
+        android:layout_marginBottom="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="@dimen/login_password_login_margintop"
+        android:text="@string/BT0027"
+        android:textColor="@color/black"
+        android:visibility="invisible" />
+
+</RelativeLayout>
