@@ -14,6 +14,8 @@ import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.packet.Message;
 
+import c.min.tseng.R;
+
 public class ChatRoom extends Activity implements OnMessageListener,
         OnClickListener {
     private MessageReceiver mUpdateMessage;

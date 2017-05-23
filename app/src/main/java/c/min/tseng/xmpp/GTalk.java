@@ -26,6 +26,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import c.min.tseng.R;
+
 public class GTalk extends Activity implements OnMessageListener,
         OnContactStateListener, OnItemClickListener {
     public static XMPPConnection mConnection;

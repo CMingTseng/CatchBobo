@@ -12,6 +12,8 @@ import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.packet.Presence;
 
+import c.min.tseng.R;
+
 
 public class login extends Activity implements OnClickListener {
     private final String ACCOUNT_KEY = "login_account";
