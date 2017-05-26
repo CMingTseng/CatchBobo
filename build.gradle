@@ -145,7 +145,7 @@ ext {
     javatarget = JavaVersion.VERSION_1_7
     compileSdkVersion = 25
     buildToolsVersion = '25.0.3'
-    supportLibVersion = '25.0.1'
+    supportLibVersion = '25.3.1'
     runnerVersion = '0.5'
     rulesVersion = '0.5'
     UiAutomatorLibVersion = '2.1.2'

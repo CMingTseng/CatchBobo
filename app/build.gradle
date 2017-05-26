@@ -10,10 +10,12 @@ android {
         applicationId "c.min.tseng"
         minSdkVersion 14
         targetSdkVersion 22
-//        versionCode 2
-//        versionName "1.0.1"
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
+        buildConfigField 'String', 'OCRPHOTOFOLDER', '"OCR-Photo"'
+        buildConfigField 'String', 'TEMPPHOTOFILE', '"camera.jpg"'
+        buildConfigField 'String', 'OCRPHOTOFILE', '"camera2.jpg"'
+        buildConfigField 'String', 'OCRTESTDATAFOLDER', '"tessdata"'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         //FIXME For use vectors http://android-developers.blogspot.tw/2016/02/android-support-library-232.html
