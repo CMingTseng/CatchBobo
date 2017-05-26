@@ -1,4 +1,4 @@
-package c.min.tseng;
+package c.min.tseng.fragment;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -40,6 +40,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import c.min.tseng.R;
 import c.min.tseng.dbfunction.DbHelper;
 
 public class Function extends Activity implements LocationListener {
@@ -51,7 +52,7 @@ public class Function extends Activity implements LocationListener {
     private HandlerThread mThread; ///宣告臨時工
     ///////////////////////////////////////////////////////////////////////////////////////
     //SQLlite處理變數
-    private static final String DB_FILE1 = "auth.db", DB_TABLE11 = "auth", DB_FILE2 = "company.db", DB_TABLE21 = "company", DB_FILE3 = "Locus.db", DB_TABLE31 = "Locus", DB_FILE4 = "Billing.db", DB_TABLE41 = "Billing";
+    private static final String DB_FILE1 = "auth.db", DB_TABLE11 = "auth", DB_FILE2 = "company.db", DB_TABLE21 = "company", DB_FILE3 = "Locus.db", DB_TABLE31 = "Locus", DB_FILE4 = "BillingFragment.db", DB_TABLE41 = "BillingFragment";
 
     private SQLiteDatabase haHelp, coHelp, gpsHelp, BillHelp;
 
@@ -141,7 +142,7 @@ public class Function extends Activity implements LocationListener {
         coHelpc.close();
 
         //
-        setContentView(R.layout.function);
+        setContentView(R.layout.fragment_function);
 
         //先要強制開啟GPS與網路
 
@@ -342,12 +343,12 @@ public class Function extends Activity implements LocationListener {
             // TODO Auto-generated method stub
 
             ////////////////////
-            ocr.setClass(Function.this, Ocr.class);
+            ocr.setClass(Function.this, TakePhotoFragment.class);
             startActivity(ocr);
             Function.this.finish();
 
-//		    billing.setClass(Function.this,Billing.class);
-//            startActivity(billing);
+//		    fragment_billing.setClass(Function.this,BillingFragment.class);
+//            startActivity(fragment_billing);
 
 
         }
@@ -444,8 +445,8 @@ public class Function extends Activity implements LocationListener {
 //		    SharedPreferences.Editor preEdit = settings.edit();
 //		    preEdit.clear();
 //		    preEdit.commit();
-//		    function.setClass(Function.this,Function.class);
-//		    startActivity(function);
+//		    fragment_function.setClass(Function.this,Function.class);
+//		    startActivity(fragment_function);
 
         }
 

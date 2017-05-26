@@ -1,9 +1,9 @@
-package c.min.tseng;
+package c.min.tseng.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
 
-public class Inspect extends Activity {
+public class Setting extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

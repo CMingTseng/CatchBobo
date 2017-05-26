@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <Spinner
-        android:id="@+id/SPCompany"
+        android:id="@+id/companylist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -17,23 +17,23 @@
         android:prompt="@string/Hint0" />
 
     <ImageView
-        android:id="@+id/IV001"
+        android:id="@+id/product_logo"
         android:layout_marginTop="50dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/LL002"
+        android:layout_above="@+id/layout_account"
         android:layout_centerHorizontal="true"
         android:src="@drawable/logo" />
 
     <LinearLayout
-        android:id="@+id/LL002"
-        android:layout_above="@+id/LL003"
+        android:id="@+id/layout_account"
+        android:layout_above="@+id/layout_password"
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/TV0021"
+            android:id="@+id/account_hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/login_textview_marginleft"
@@ -44,7 +44,7 @@
 
 
         <EditText
-            android:id="@+id/ET0021"
+            android:id="@+id/account"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/login_edittext_marginleft"
@@ -54,7 +54,7 @@
             android:visibility="gone" />
 
         <Button
-            android:id="@+id/IMEI"
+            android:id="@+id/checkimei"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/cornflowerblue"
@@ -63,15 +63,15 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/LL003"
-        android:layout_above="@+id/BT0021"
+        android:id="@+id/layout_password"
+        android:layout_above="@+id/registered_device"
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/login_account_password_margintop">
 
         <TextView
-            android:id="@+id/TV0022"
+            android:id="@+id/password_hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/login_textview_marginleft"
@@ -81,7 +81,7 @@
             android:visibility="gone" />
 
         <EditText
-            android:id="@+id/ET0022"
+            android:id="@+id/password"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="@string/Hint2"
@@ -93,7 +93,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/BT0021"
+        android:id="@+id/registered_device"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/login_loginbutton_height"
         android:layout_alignParentBottom="true"

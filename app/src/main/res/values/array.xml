@@ -1,0 +1,9 @@
+<resources>
+    <string-array name="default_license_company">
+        <item>台北市嘟嘟車房, https://www.pcdvd.com.tw/showthread.php?t=1129311</item>
+        <item>新北市煞氣車霸, https://www.pcdvd.com.tw/showthread.php?t=1129333</item>
+        <item>台北市一方猛將, https://www.pcdvd.com.tw/showthread.php?t=1129355</item>
+        <item>台北市天龍車行, https://www.pcdvd.com.tw/showthread.php?t=1129388</item>
+        <item>台中市宜居天堂, https://www.pcdvd.com.tw/showthread.php?t=1129322</item>
+    </string-array>
+</resources>

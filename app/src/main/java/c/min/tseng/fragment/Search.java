@@ -1,4 +1,4 @@
-package c.min.tseng;
+package c.min.tseng.fragment;
 
 import android.app.Activity;
 import android.content.Context;
@@ -29,13 +29,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import c.min.tseng.R;
 import c.min.tseng.dbfunction.DbHelper;
 
-import static c.min.tseng.Function.Loccalreport;
-import static c.min.tseng.Function.authData;
-import static c.min.tseng.Function.strMyName;
-
-//public class Billing extends Activity implements SurfaceHolder.Callback {
+//public class BillingFragment extends Activity implements SurfaceHolder.Callback {
 public class Search extends Activity implements LocationListener {
 
     ////////多執行緒-Handler和Thread  ///////////////////////
@@ -45,7 +42,7 @@ public class Search extends Activity implements LocationListener {
     private HandlerThread mThread; ///宣告臨時工
     ///////////////////////////////////////////////////////////////////////////////////////
     //SQLlite處理變數
-    private static final String DB_FILE1 = "auth.db", DB_TABLE11 = "auth", DB_FILE2 = "company.db", DB_TABLE21 = "company", DB_FILE4 = "Billing.db", DB_TABLE41 = "Billing";
+    private static final String DB_FILE1 = "auth.db", DB_TABLE11 = "auth", DB_FILE2 = "company.db", DB_TABLE21 = "company", DB_FILE4 = "BillingFragment.db", DB_TABLE41 = "BillingFragment";
     private SQLiteDatabase haHelp, coHelp, gpsHelp, BillHelp;
     private DbHelper BillDbHp;
 
@@ -133,11 +130,11 @@ public class Search extends Activity implements LocationListener {
 
         //承接收費員基本資料
 //        Log.d("WOWauthDataWOWMap", authData);
-        strMyUid = authData;
+        strMyUid = Function.authData;
 //        Log.d("WOWauthDataWOWMap2", strMyUid);
 //        
 //        Log.d("BBBBNAME1", strMyName);
-        billname = strMyName;
+        billname = Function.strMyName;
 //        Log.d("BBBBName2", billname);
 
         //取得位置
@@ -401,7 +398,7 @@ public class Search extends Activity implements LocationListener {
             try {
                 HttpClient client = new DefaultHttpClient();
 
-                HttpGet get = new HttpGet("http://" + Loccalreport + "Caru2.php?a001=" + newUpdate);
+                HttpGet get = new HttpGet("http://" + Function.Loccalreport + "Caru2.php?a001=" + newUpdate);
                 client.execute(get);
                 //  reportlocation();
             } catch (Exception ee) {

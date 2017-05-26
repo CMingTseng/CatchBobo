@@ -1,4 +1,4 @@
-package c.min.tseng;
+package c.min.tseng.fragment;
 
 import android.app.Activity;
 import android.content.Context;
@@ -29,27 +29,12 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import c.min.tseng.R.string;
+import c.min.tseng.R;
 import c.min.tseng.dbfunction.DbHelper;
-
-import static c.min.tseng.Billing.nBilET0011;
-import static c.min.tseng.Billing.nBilET002;
-import static c.min.tseng.Billing.nBilET0021;
-import static c.min.tseng.Billing.nBilET0022;
-import static c.min.tseng.Billing.nBilET004;
-import static c.min.tseng.Billing.nBilSP0011;
-import static c.min.tseng.Billing.nBilSP002;
-import static c.min.tseng.Billing.nBilSP0022;
-import static c.min.tseng.Billing.nBilSP010func1;
-import static c.min.tseng.Billing.nBilTime;
-import static c.min.tseng.Function.Loccalreport;
-import static c.min.tseng.Function.authData;
-import static c.min.tseng.Function.strMyName;
-import static c.min.tseng.Ocr.OriginalPhoto;
 
 //開單填入資訊
 
-//public class Billing extends Activity implements SurfaceHolder.Callback {
+//public class BillingFragment extends Activity implements SurfaceHolder.Callback {
 public class Printer extends Activity implements LocationListener {
 
     ////////多執行緒-Handler和Thread  ///////////////////////
@@ -59,7 +44,7 @@ public class Printer extends Activity implements LocationListener {
     private HandlerThread mThread; ///宣告臨時工
     ///////////////////////////////////////////////////////////////////////////////////////
     //SQLlite處理變數
-    private static final String DB_FILE1 = "auth.db", DB_TABLE11 = "auth", DB_FILE2 = "company.db", DB_TABLE21 = "company", DB_FILE4 = "Billing.db", DB_TABLE41 = "Billing";
+    private static final String DB_FILE1 = "auth.db", DB_TABLE11 = "auth", DB_FILE2 = "company.db", DB_TABLE21 = "company", DB_FILE4 = "BillingFragment.db", DB_TABLE41 = "BillingFragment";
     private SQLiteDatabase haHelp, coHelp, gpsHelp, BillHelp;
     private DbHelper BillDbHp;
 
@@ -149,11 +134,11 @@ public class Printer extends Activity implements LocationListener {
 //        Log.d("WOWauthDataWOWMap", Loccalreport);
         //承接收費員基本資料
 //        Log.d("WOWauthDataWOWMap", authData);
-        strMyUid = authData;
+        strMyUid = Function.authData;
 //        Log.d("WOWauthDataWOWMap2", strMyUid);
 //        
 //        Log.d("BBBBNAME1", strMyName);
-        billname = strMyName;
+        billname = Function.strMyName;
 //        Log.d("BBBBName2", billname);
 
         //取得位置
@@ -227,7 +212,7 @@ public class Printer extends Activity implements LocationListener {
         // TODO Auto-generated method stub
 
         //
-        PriLL001 = (LinearLayout) findViewById(R.id.TCBF001);
+//        PriLL001 = (LinearLayout) findViewById(R.id.TCBF001);
         PriTB001 = (TableRow) findViewById(R.id.PriTB001);
         PriTB002 = (TableRow) findViewById(R.id.PriTB002);
         PriTB003 = (TableRow) findViewById(R.id.PriTB003);
@@ -299,32 +284,32 @@ public class Printer extends Activity implements LocationListener {
 
 
         //設定開單人員姓名
-        PToll = strMyName;
-        updataurl = Loccalreport;
+        PToll = Function.strMyName;
+        updataurl = Function.Loccalreport;
 
         //單號種類
-        PriSP001.setText(nBilSP0011);
+        PriSP001.setText(BillingFragment.nBilSP0011);
         //費率類別
-        PriSP002.setText(nBilSP002);
+        PriSP002.setText(BillingFragment.nBilSP002);
 
         //車牌
-        PriET0011.setText(nBilET0011);
+        PriET0011.setText(BillingFragment.nBilET0011);
 //        PriET0012.setText(text);
 
         //設定開單時間
-        PriET002.setText(nBilET002);
-        PriET0021.setText(nBilET0021);
-        PriET0022.setText(nBilET0022);
+        PriET002.setText(BillingFragment.nBilET002);
+        PriET0021.setText(BillingFragment.nBilET0021);
+        PriET0022.setText(BillingFragment.nBilET0022);
         //設定路段
-        PriET004.setText(nBilET004);
+        PriET004.setText(BillingFragment.nBilET004);
         //設定車種
-        PriSP010func.setText(nBilSP010func1);
+        PriSP010func.setText(BillingFragment.nBilSP010func1);
         //設定基本費率
-        PriTV012.setText(nBilSP0022);
+        PriTV012.setText(BillingFragment.nBilSP0022);
         //設定繳費截止逾期日期
 
 ///////////逾期時間////////
-        String untildate = nBilET002 + "/" + nBilET0021 + "/" + nBilET0022 + "/" + nBilTime; //給Calender的時間
+        String untildate = BillingFragment.nBilET002 + "/" + BillingFragment.nBilET0021 + "/" + BillingFragment.nBilET0022 + "/" + BillingFragment.nBilTime; //給Calender的時間
 
         Calendar cal = Calendar.getInstance();
         Calendar timeadd1 = Calendar.getInstance();
@@ -404,16 +389,16 @@ public class Printer extends Activity implements LocationListener {
         PriET0062.setText(OverdueTim[1]);
         PriET0063.setText(OverdueTim[2]);
         //設定費率加總
-        PriTV00710.setText(nBilSP0022);
+        PriTV00710.setText(BillingFragment.nBilSP0022);
 
-        int i = Integer.parseInt(nBilSP0022);
+        int i = Integer.parseInt(BillingFragment.nBilSP0022);
 //        String s = String.valueOf(i); 
 
         PriTV00711.setText(String.valueOf(i * 2));
         PriTV00712.setText(String.valueOf(i * 3));
         //設定停車時間加總
 
-        PriTV00810.setText(nBilTime);
+        PriTV00810.setText(BillingFragment.nBilTime);
         PriTV00811.setText(NextTime1[3]);
         PriTV00812.setText(NextTime2[3]);
 //        PriTV00813.setText(NextTime3[3]);
@@ -582,7 +567,7 @@ public class Printer extends Activity implements LocationListener {
             //  Log.d("AAAWWWWWWauths", auths);
 
             String CarPicpath;
-            CarPicpath = OriginalPhoto;
+            CarPicpath = TakePhotoFragment.OriginalPhoto;
             //暫時用亂數來產生開單單號條碼
             int i = 0;
             i = (int) (Math.random() * 100000) + 1;
@@ -664,7 +649,7 @@ public class Printer extends Activity implements LocationListener {
             try {
                 HttpClient client = new DefaultHttpClient();
 
-                HttpGet get = new HttpGet("http://" + Loccalreport + "Caru2.php?a001=" + newUpdate);
+                HttpGet get = new HttpGet("http://" + Function.Loccalreport + "Caru2.php?a001=" + newUpdate);
                 client.execute(get);
                 //  reportlocation();
             } catch (Exception ee) {

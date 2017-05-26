@@ -6,7 +6,7 @@
     android:layout_height="fill_parent">
 
     <ImageView
-        android:id="@+id/IV001"
+        android:id="@+id/product_logo"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginTop="5dp"

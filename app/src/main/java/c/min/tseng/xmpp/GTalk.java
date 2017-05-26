@@ -207,7 +207,7 @@ public class GTalk extends Activity implements OnMessageListener,
             LinearLayout linearLayout = (LinearLayout) mLayoutInflater.inflate(
                     R.layout.contact_item, null);
             ImageView ivContactIcon = (ImageView) linearLayout
-                    .findViewById(R.id.IV001);
+                    .findViewById(R.id.product_logo);
             TextView tvContactNickname = ((TextView) linearLayout
                     .findViewById(R.id.TV0011));
             ivContactIcon

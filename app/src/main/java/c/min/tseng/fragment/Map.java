@@ -1,4 +1,4 @@
-package c.min.tseng;
+package c.min.tseng.fragment;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -52,11 +52,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import c.min.tseng.R;
 import c.min.tseng.dbfunction.DbHelper;
 import c.min.tseng.xmpp.login;
-
-import static c.min.tseng.Function.Loccalreport;
-import static c.min.tseng.Function.authData;
 
 
 public class Map extends Activity implements LocationListener {
@@ -141,7 +139,7 @@ public class Map extends Activity implements LocationListener {
         setContentView(R.layout.map);
 
         //取得跨class資料
-        updataurl = Loccalreport;
+        updataurl = Function.Loccalreport;
 
         //取得本機資料 個人資料定義值
         TelephonyManager Tel = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
@@ -158,7 +156,7 @@ public class Map extends Activity implements LocationListener {
 
 
 //        Log.d("WOWauthDataWOWMap", authData);
-        strMyUid = authData;
+        strMyUid = Function.authData;
 //        Log.d("WOWauthDataWOWMap2", strMyUid);
 
 //        //先取得公司url好回報與抓取資料
@@ -602,7 +600,7 @@ public class Map extends Activity implements LocationListener {
                             it3.setType("vnd.android-dir/mms-sms");
                             startActivity(it3);
 //                              SmsManager sms=SmsManager.getDefault();
-//                              PendingIntent mPI=PendingIntent.getBroadcast(Main.this ,0,new Intent(),0);
+//                              PendingIntent mPI=PendingIntent.getBroadcast(MainActivity.this ,0,new Intent(),0);
 ////                              sms.sendTextMessage(destinationAddress, scAddress, text, sentIntent, deliveryIntent);
 //                              sms.sendTextMessage(personal[1], null, "Text123",mPI , null);
                             break;
