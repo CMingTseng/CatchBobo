@@ -1,36 +1,135 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.firebase.firebase-crash'
+apply plugin: 'com.gladed.androidgitversion'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "c.min.tseng"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 2
-        versionName "1.0.1"
+//        versionCode 2
+//        versionName "1.0.1"
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        multiDexEnabled true
+        //FIXME For use vectors http://android-developers.blogspot.tw/2016/02/android-support-library-232.html
+        //FIXME https://medium.com/@chrisbanes/appcompat-v23-2-age-of-the-vectors-91cbafa87c88#.8jrovbbln
+        //FIXME http://www.mobile-open.com/2016/102194.html
+        generatedDensities = []
+        aaptOptions {
+            additionalParameters "--no-version-vectors"
         }
     }
+
+    buildTypes {
+        release {
+            minifyEnabled true //proguard  Yes / No
+            proguardFile 'proguard-rules/proguard-gson.pro'
+            proguardFile 'proguard-rules/proguard-jackson-2.pro'
+            proguardFile 'proguard-rules/proguard-square-okio.pro'
+            proguardFile 'proguard-rules/proguard-square-okhttp3.pro'
+            proguardFile 'proguard-rules/proguard-square-retrofit2.pro'
+            proguardFile 'proguard-rules/proguard-support-design.pro'
+            proguardFile 'proguard-rules/proguard-support-v7-appcompat.pro'
+            proguardFile 'proguard-rules/proguard-support-v7-cardview.pro'
+            proguardFile 'proguard-rules/proguard-activeandroid.pro'
+            proguardFile 'proguard-rules/proguard-google-play-services.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            shrinkResources true
+            debuggable false
+            jniDebuggable false
+            renderscriptDebuggable false
+            zipAlignEnabled true
+        }
+
+        debug {
+            applicationIdSuffix ".debug"
+            shrinkResources false
+            zipAlignEnabled true
+            minifyEnabled false
+            debuggable true
+            jniDebuggable true
+            renderscriptDebuggable true
+        }
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+
+    packagingOptions {
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LGPL2.1'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+}
+
+task copyNativeLibs(type: Copy) {
+    group = 'android'
+    from 'libs/armeabi'
+    into 'src/main/jniLibs/armeabi'
+}
+
+tasks.withType(JavaCompile) { compileTask -> compileTask.dependsOn copyNativeLibs }
+
+task saveBuildLogInfo {
+    group = 'other'
+    doFirst {
+        // get the current commit hash in git
+        def git_log = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'log', '--since=1.weeks'
+            standardOutput = git_log
+        }
+        git_log = git_log.toString().trim()
+
+        // save the combined build info into assets/build.info file
+        def result_line = git_log
+        def assetsDir = "$projectDir/build/"
+        def buildInfoFile = new File(assetsDir, 'gitlog.txt').getAbsolutePath()
+        new File(buildInfoFile).text = git_log
+    }
+}
+
+tasks.withType(JavaCompile) { compileTask -> compileTask.dependsOn saveBuildLogInfo }
+
+configurations {}
+configurations.all {
+    resolutionStrategy.force "com.android.support:support-annotations:${rootProject.ext.supportLibVersion}"
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile "com.android.support:support-annotations:${rootProject.ext.supportLibVersion}"
+    compile "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
+    compile "com.android.support:design:${rootProject.ext.supportLibVersion}"
+    compile "com.android.support:recyclerview-v7:${rootProject.ext.supportLibVersion}"
+    compile "com.android.support:cardview-v7:${rootProject.ext.supportLibVersion}"
+    compile "com.android.support:support-v13:${rootProject.ext.supportLibVersion}"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    testCompile 'junit:junit:4.12'
     compile 'com.github.bumptech.glide:glide:+'
     compile 'utils.neo.idv:utils:+'
     compile 'org.igniterealtime.smack:smack:3.2.1'
     compile 'com.google.android.gms:play-services:4.0.30'
     compile 'org.apache.httpcomponents:httpmime:4.1.2'
 }
+//apply plugin: 'com.google.gms.google-services'
