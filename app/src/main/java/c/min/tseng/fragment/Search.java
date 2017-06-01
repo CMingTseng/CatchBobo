@@ -19,7 +19,6 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.text.SimpleDateFormat;
@@ -130,12 +129,12 @@ public class Search extends Activity implements LocationListener {
 
         //承接收費員基本資料
 //        Log.d("WOWauthDataWOWMap", authData);
-        strMyUid = Function.authData;
-//        Log.d("WOWauthDataWOWMap2", strMyUid);
-//        
-//        Log.d("BBBBNAME1", strMyName);
-        billname = Function.strMyName;
-//        Log.d("BBBBName2", billname);
+//        strMyUid = FunctionFragment.authData;
+////        Log.d("WOWauthDataWOWMap2", strMyUid);
+////
+////        Log.d("BBBBNAME1", strMyName);
+//        billname = FunctionFragment.strMyName;
+////        Log.d("BBBBName2", billname);
 
         //取得位置
         mLocationMgr = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -398,8 +397,8 @@ public class Search extends Activity implements LocationListener {
             try {
                 HttpClient client = new DefaultHttpClient();
 
-                HttpGet get = new HttpGet("http://" + Function.Loccalreport + "Caru2.php?a001=" + newUpdate);
-                client.execute(get);
+//                HttpGet get = new HttpGet("http://" + FunctionFragment.Loccalreport + "Caru2.php?a001=" + newUpdate);
+//                client.execute(get);
                 //  reportlocation();
             } catch (Exception ee) {
             }

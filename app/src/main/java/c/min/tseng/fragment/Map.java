@@ -13,7 +13,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -26,15 +25,12 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -53,7 +49,6 @@ import java.util.Date;
 import java.util.List;
 
 import c.min.tseng.R;
-import c.min.tseng.dbfunction.DbHelper;
 import c.min.tseng.xmpp.login;
 
 
@@ -138,108 +133,108 @@ public class Map extends Activity implements LocationListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map);
 
-        //取得跨class資料
-        updataurl = Function.Loccalreport;
-
-        //取得本機資料 個人資料定義值
-        TelephonyManager Tel = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
-        WifiManager wifiinfo = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
-
-
-//        strMyGrp=getString(R.string.gro2);
-
-//        strMyTel=getString(R.string.mytel);
-
-        myimei = Tel.getDeviceId();
-
-        WifiInfo mymacadd = wifiinfo.getConnectionInfo();
-
-
-//        Log.d("WOWauthDataWOWMap", authData);
-        strMyUid = Function.authData;
-//        Log.d("WOWauthDataWOWMap2", strMyUid);
-
-//        //先取得公司url好回報與抓取資料
-//        DbHelper CoDbHp = new DbHelper(getApplicationContext(), DB_FILE2,    null, 1);
-//        coHelp = CoDbHp.getReadableDatabase();// 查詢資料庫，因為是查詢，所以使用唯讀模式 .getWritableDatabase可寫入
-//        Cursor coHelpc=null;
-//        coHelpc=coHelp.query(true, DB_TABLE21, new String[]{"url"}, null, null, null, null, null,null); 
-//        if (coHelpc==null) {
-//          return;
-//       }
-//        else {
-//            coHelpc.moveToFirst();//查詢完SQLlite會位於最後.要重新移到最前取值
-//            GPSlist=coHelpc.getString(0); 
-////            Log.d("GPSlistWOW", GPSlist);
-//            SQLPHP=GPSlist;
-//            
-////            Log.d("SQLPHPWOW", SQLPHP);
-//       }
-//        coHelpc.close();
-
-        DbHelper GPSDbHp = new DbHelper(getApplicationContext(), DB_FILE3, null, 1);
-        gpsHelp = GPSDbHp.getWritableDatabase();//讀寫本機員工資料庫
-
-        // UI 的設定
-        spInfo = (Spinner) findViewById(R.id.SP001User);
-        //setOnItem陣列方式擺放Spinner資料
-        spInfo.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> arg0, View view, int position, long id) {
-                //int position: 會傳入user選到的item的位置
-                //int id: 會傳入user選到的item的id
-                // TODO Auto-generated method stub     
-
-                //建立Spinner內的資料
-                //建立sLocation陣列存放使用strToken2方法切割mArea陣列後的資料
-                sLocation = mArea[position].split(strToken2);
-                //取得sLocation陣列1內的資料為成員userid
-                String Userid = sLocation[0]; // user name
-
-                //取得sLocation陣列1內的資料為成員名稱
-                String Usertitle = sLocation[1]; // user name
-//                  Log.d("DDDDDDAAAAAA",Usertitle);
-                //dLat與dLon取得切割後為double的經緯度數值
-                dLat = Double.parseDouble(sLocation[2]); // 南北緯
-                dLon = Double.parseDouble(sLocation[3]); // 東西經
-                //取得切割後成員詳細資訊
-//                   Log.d("sLocation",sLocation[1]);
-//                   Log.d("sLocation",sLocation[3]);
-                if (sLocation.length >= 5)
-                    strtel = sLocation[4]; // Tel
-                if (sLocation.length >= 6)
-                    strtel = sLocation[5]; // Email
-                if (sLocation.length >= 7)
-                    strtel = sLocation[6]; // LastTime
-                //VGPS數值由dLat, dLon填入
-                VGPS = new LatLng(dLat, dLon);
-                //設定Marker
-//                  if(Userid.equals(getString(R.string.uid1)) )//把自己設不同顏色
-//                      vgps[position] = map.addMarker(new MarkerOptions().position(VGPS)
-//                                .title(Usertitle).snippet(dLat+"#"+dLon+"#"+sLocation[4]+"#"+sLocation[5]).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
-
-                if (Userid.equals(strMyUid))//把自己設不同顏色
-                    vgps[position] = map.addMarker(new MarkerOptions().position(VGPS)
-                            .title(Usertitle).snippet(dLat + "#" + dLon + "#" + sLocation[4] + "#" + sLocation[5] + "#" + sLocation[6]).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
-                else
-                    vgps[position] = map.addMarker(new MarkerOptions().position(VGPS)
-                            .title(Usertitle).snippet(dLat + "#" + dLon + "#" + sLocation[4] + "#" + sLocation[5] + "#" + sLocation[6]));
-
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(VGPS, 12));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-                // TODO Auto-generated method stub                
-            }
-        });
-
-        //Map準確程度
-        mLocationMgr = (LocationManager) getSystemService(LOCATION_SERVICE);
-        Criteria c = new Criteria();
-        mBestLocationProv = mLocationMgr.getBestProvider(c, true);
-        //一開始先把資料庫的資料顯示出來
-        showList();
+//        //取得跨class資料
+//        updataurl = FunctionFragment.Loccalreport;
+//
+//        //取得本機資料 個人資料定義值
+//        TelephonyManager Tel = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+//        WifiManager wifiinfo = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
+//
+//
+////        strMyGrp=getString(R.string.gro2);
+//
+////        strMyTel=getString(R.string.mytel);
+//
+//        myimei = Tel.getDeviceId();
+//
+//        WifiInfo mymacadd = wifiinfo.getConnectionInfo();
+//
+//
+////        Log.d("WOWauthDataWOWMap", authData);
+//        strMyUid = FunctionFragment.authData;
+////        Log.d("WOWauthDataWOWMap2", strMyUid);
+//
+////        //先取得公司url好回報與抓取資料
+////        DbHelper CoDbHp = new DbHelper(getApplicationContext(), DB_FILE2,    null, 1);
+////        coHelp = CoDbHp.getReadableDatabase();// 查詢資料庫，因為是查詢，所以使用唯讀模式 .getWritableDatabase可寫入
+////        Cursor coHelpc=null;
+////        coHelpc=coHelp.query(true, DB_TABLE21, new String[]{"url"}, null, null, null, null, null,null);
+////        if (coHelpc==null) {
+////          return;
+////       }
+////        else {
+////            coHelpc.moveToFirst();//查詢完SQLlite會位於最後.要重新移到最前取值
+////            GPSlist=coHelpc.getString(0);
+//////            Log.d("GPSlistWOW", GPSlist);
+////            SQLPHP=GPSlist;
+////
+//////            Log.d("SQLPHPWOW", SQLPHP);
+////       }
+////        coHelpc.close();
+//
+//        DbHelper GPSDbHp = new DbHelper(getApplicationContext(), DB_FILE3, null, 1);
+//        gpsHelp = GPSDbHp.getWritableDatabase();//讀寫本機員工資料庫
+//
+//        // UI 的設定
+//        spInfo = (Spinner) findViewById(R.id.SP001User);
+//        //setOnItem陣列方式擺放Spinner資料
+//        spInfo.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> arg0, View view, int position, long id) {
+//                //int position: 會傳入user選到的item的位置
+//                //int id: 會傳入user選到的item的id
+//                // TODO Auto-generated method stub
+//
+//                //建立Spinner內的資料
+//                //建立sLocation陣列存放使用strToken2方法切割mArea陣列後的資料
+//                sLocation = mArea[position].split(strToken2);
+//                //取得sLocation陣列1內的資料為成員userid
+//                String Userid = sLocation[0]; // user name
+//
+//                //取得sLocation陣列1內的資料為成員名稱
+//                String Usertitle = sLocation[1]; // user name
+////                  Log.d("DDDDDDAAAAAA",Usertitle);
+//                //dLat與dLon取得切割後為double的經緯度數值
+//                dLat = Double.parseDouble(sLocation[2]); // 南北緯
+//                dLon = Double.parseDouble(sLocation[3]); // 東西經
+//                //取得切割後成員詳細資訊
+////                   Log.d("sLocation",sLocation[1]);
+////                   Log.d("sLocation",sLocation[3]);
+//                if (sLocation.length >= 5)
+//                    strtel = sLocation[4]; // Tel
+//                if (sLocation.length >= 6)
+//                    strtel = sLocation[5]; // Email
+//                if (sLocation.length >= 7)
+//                    strtel = sLocation[6]; // LastTime
+//                //VGPS數值由dLat, dLon填入
+//                VGPS = new LatLng(dLat, dLon);
+//                //設定Marker
+////                  if(Userid.equals(getString(R.string.uid1)) )//把自己設不同顏色
+////                      vgps[position] = map.addMarker(new MarkerOptions().position(VGPS)
+////                                .title(Usertitle).snippet(dLat+"#"+dLon+"#"+sLocation[4]+"#"+sLocation[5]).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+//
+//                if (Userid.equals(strMyUid))//把自己設不同顏色
+//                    vgps[position] = map.addMarker(new MarkerOptions().position(VGPS)
+//                            .title(Usertitle).snippet(dLat + "#" + dLon + "#" + sLocation[4] + "#" + sLocation[5] + "#" + sLocation[6]).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+//                else
+//                    vgps[position] = map.addMarker(new MarkerOptions().position(VGPS)
+//                            .title(Usertitle).snippet(dLat + "#" + dLon + "#" + sLocation[4] + "#" + sLocation[5] + "#" + sLocation[6]));
+//
+//                map.moveCamera(CameraUpdateFactory.newLatLngZoom(VGPS, 12));
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> arg0) {
+//                // TODO Auto-generated method stub
+//            }
+//        });
+//
+//        //Map準確程度
+//        mLocationMgr = (LocationManager) getSystemService(LOCATION_SERVICE);
+//        Criteria c = new Criteria();
+//        mBestLocationProv = mLocationMgr.getBestProvider(c, true);
+//        //一開始先把資料庫的資料顯示出來
+//        showList();
 //        Sqliteupdate();
 //       onDestroy();        
     }

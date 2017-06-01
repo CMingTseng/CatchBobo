@@ -22,7 +22,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.text.SimpleDateFormat;
@@ -133,12 +132,12 @@ public class Printer extends Activity implements LocationListener {
 
 //        Log.d("WOWauthDataWOWMap", Loccalreport);
         //承接收費員基本資料
-//        Log.d("WOWauthDataWOWMap", authData);
-        strMyUid = Function.authData;
-//        Log.d("WOWauthDataWOWMap2", strMyUid);
-//        
-//        Log.d("BBBBNAME1", strMyName);
-        billname = Function.strMyName;
+////        Log.d("WOWauthDataWOWMap", authData);
+//        strMyUid = FunctionFragment.authData;
+////        Log.d("WOWauthDataWOWMap2", strMyUid);
+////
+////        Log.d("BBBBNAME1", strMyName);
+//        billname = FunctionFragment.strMyName;
 //        Log.d("BBBBName2", billname);
 
         //取得位置
@@ -282,34 +281,34 @@ public class Printer extends Activity implements LocationListener {
         PriBT002.setOnClickListener(PriBT002Clk);
         PriBT003.setOnClickListener(PriBT003Clk);
 
-
-        //設定開單人員姓名
-        PToll = Function.strMyName;
-        updataurl = Function.Loccalreport;
-
-        //單號種類
-        PriSP001.setText(BillingFragment.nBilSP0011);
-        //費率類別
-        PriSP002.setText(BillingFragment.nBilSP002);
-
-        //車牌
-        PriET0011.setText(BillingFragment.nBilET0011);
-//        PriET0012.setText(text);
-
-        //設定開單時間
-        PriET002.setText(BillingFragment.nBilET002);
-        PriET0021.setText(BillingFragment.nBilET0021);
-        PriET0022.setText(BillingFragment.nBilET0022);
-        //設定路段
-        PriET004.setText(BillingFragment.nBilET004);
-        //設定車種
-        PriSP010func.setText(BillingFragment.nBilSP010func1);
-        //設定基本費率
-        PriTV012.setText(BillingFragment.nBilSP0022);
-        //設定繳費截止逾期日期
-
-///////////逾期時間////////
-        String untildate = BillingFragment.nBilET002 + "/" + BillingFragment.nBilET0021 + "/" + BillingFragment.nBilET0022 + "/" + BillingFragment.nBilTime; //給Calender的時間
+//
+//        //設定開單人員姓名
+//        PToll = FunctionFragment.strMyName;
+//        updataurl = FunctionFragment.Loccalreport;
+//
+//        //單號種類
+//        PriSP001.setText(BillingFragment.nBilSP0011);
+//        //費率類別
+//        PriSP002.setText(BillingFragment.nBilSP002);
+//
+//        //車牌
+//        PriET0011.setText(BillingFragment.nBilET0011);
+////        PriET0012.setText(text);
+//
+//        //設定開單時間
+//        PriET002.setText(BillingFragment.nBilET002);
+//        PriET0021.setText(BillingFragment.nBilET0021);
+//        PriET0022.setText(BillingFragment.nBilET0022);
+//        //設定路段
+//        PriET004.setText(BillingFragment.nBilET004);
+//        //設定車種
+//        PriSP010func.setText(BillingFragment.nBilSP010func1);
+//        //設定基本費率
+//        PriTV012.setText(BillingFragment.nBilSP0022);
+//        //設定繳費截止逾期日期
+//
+/////////////逾期時間////////
+//        String untildate = BillingFragment.nBilET002 + "/" + BillingFragment.nBilET0021 + "/" + BillingFragment.nBilET0022 + "/" + BillingFragment.nBilTime; //給Calender的時間
 
         Calendar cal = Calendar.getInstance();
         Calendar timeadd1 = Calendar.getInstance();
@@ -335,16 +334,16 @@ public class Printer extends Activity implements LocationListener {
         Calendar timeadd21 = Calendar.getInstance();
         Calendar timeadd22 = Calendar.getInstance();
         Calendar timeadd23 = Calendar.getInstance();
-        Calendar timeadd24 = Calendar.getInstance();
-        try {
-            cal.setTime(sdf.parse(untildate));
-        } catch (java.text.ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        //加一個月
-        cal.add(Calendar.MONTH, 1);
-        //加小時
+//        Calendar timeadd24 = Calendar.getInstance();
+//        try {
+//            cal.setTime(sdf.parse(untildate));
+//        } catch (java.text.ParseException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+//        //加一個月
+//        cal.add(Calendar.MONTH, 1);
+//        //加小時
         timeadd1.add(Calendar.HOUR, 1);
         timeadd2.add(Calendar.HOUR, 2);
         timeadd3.add(Calendar.HOUR, 3);
@@ -368,7 +367,7 @@ public class Printer extends Activity implements LocationListener {
         timeadd21.add(Calendar.HOUR, 21);
         timeadd22.add(Calendar.HOUR, 22);
         timeadd23.add(Calendar.HOUR, 23);
-        timeadd24.add(Calendar.HOUR, 24);
+//        timeadd24.add(Calendar.HOUR, 24);
 
 
         OverdueTim = sdf.format(cal.getTime()).split("-");
@@ -384,24 +383,24 @@ public class Printer extends Activity implements LocationListener {
 //      String s2 = String.valueOf(i2);
 
 
-//        PriET0061.setText(s2);
-        PriET0061.setText(String.valueOf(Integer.parseInt(OverdueTim[0]) - 1911));
-        PriET0062.setText(OverdueTim[1]);
-        PriET0063.setText(OverdueTim[2]);
-        //設定費率加總
-        PriTV00710.setText(BillingFragment.nBilSP0022);
-
-        int i = Integer.parseInt(BillingFragment.nBilSP0022);
-//        String s = String.valueOf(i); 
-
-        PriTV00711.setText(String.valueOf(i * 2));
-        PriTV00712.setText(String.valueOf(i * 3));
-        //設定停車時間加總
-
-        PriTV00810.setText(BillingFragment.nBilTime);
-        PriTV00811.setText(NextTime1[3]);
-        PriTV00812.setText(NextTime2[3]);
-//        PriTV00813.setText(NextTime3[3]);
+////        PriET0061.setText(s2);
+//        PriET0061.setText(String.valueOf(Integer.parseInt(OverdueTim[0]) - 1911));
+//        PriET0062.setText(OverdueTim[1]);
+//        PriET0063.setText(OverdueTim[2]);
+//        //設定費率加總
+//        PriTV00710.setText(BillingFragment.nBilSP0022);
+//
+//        int i = Integer.parseInt(BillingFragment.nBilSP0022);
+////        String s = String.valueOf(i);
+//
+//        PriTV00711.setText(String.valueOf(i * 2));
+//        PriTV00712.setText(String.valueOf(i * 3));
+//        //設定停車時間加總
+//
+//        PriTV00810.setText(BillingFragment.nBilTime);
+//        PriTV00811.setText(NextTime1[3]);
+//        PriTV00812.setText(NextTime2[3]);
+////        PriTV00813.setText(NextTime3[3]);
 //        
         //設定開單人
         PriTV00910.setText(PToll);
@@ -418,7 +417,7 @@ public class Printer extends Activity implements LocationListener {
 //   列印
 
             Toast.makeText(getApplicationContext(), getString(R.string.PriTemp1), Toast.LENGTH_LONG).show();
-            function.setClass(Printer.this, Function.class);
+            function.setClass(Printer.this, FunctionFragment.class);
             startActivity(function);
             Printer.this.finish();
 
@@ -444,7 +443,7 @@ public class Printer extends Activity implements LocationListener {
         public void onClick(View v) {
             //更新SQLite
 
-            function.setClass(Printer.this, Function.class);
+            function.setClass(Printer.this, FunctionFragment.class);
             startActivity(function);
             Printer.this.finish();
         }
@@ -567,7 +566,7 @@ public class Printer extends Activity implements LocationListener {
             //  Log.d("AAAWWWWWWauths", auths);
 
             String CarPicpath;
-            CarPicpath = TakePhotoFragment.OriginalPhoto;
+//            CarPicpath = TakePhotoFragment.OriginalPhoto;
             //暫時用亂數來產生開單單號條碼
             int i = 0;
             i = (int) (Math.random() * 100000) + 1;
@@ -649,8 +648,8 @@ public class Printer extends Activity implements LocationListener {
             try {
                 HttpClient client = new DefaultHttpClient();
 
-                HttpGet get = new HttpGet("http://" + Function.Loccalreport + "Caru2.php?a001=" + newUpdate);
-                client.execute(get);
+//                HttpGet get = new HttpGet("http://" + FunctionFragment.Loccalreport + "Caru2.php?a001=" + newUpdate);
+//                client.execute(get);
                 //  reportlocation();
             } catch (Exception ee) {
             }
