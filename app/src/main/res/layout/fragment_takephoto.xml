@@ -5,8 +5,8 @@
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
-    <SurfaceView
-        android:id="@+id/mSurfaceView"
+    <TextureView
+        android:id="@+id/textureview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
@@ -17,25 +17,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <Button
-            android:id="@+id/OCBT001"
+            android:id="@+id/takephoto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
             android:text="@string/OCBT001" />
-
-        <Button
-            android:id="@+id/OCBT002"
-            android:layout_below="@+id/OCBT001"
-            android:layout_marginTop="40dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:text="@string/OCBT002" />
-
 
     </RelativeLayout>
 
