@@ -6,4 +6,33 @@
         <item>台北市天龍車行, https://www.pcdvd.com.tw/showthread.php?t=1129388</item>
         <item>台中市宜居天堂, https://www.pcdvd.com.tw/showthread.php?t=1129322</item>
     </string-array>
+
+
+    <string-array name="billing_type_lists">
+        <item>通知單,1</item>
+        <item>稽查單,2</item>
+        <item>告發單,3</item>
+    </string-array>
+
+    <string-array name="billing_cost_ype_lists">
+        <item>計時一般費率,1,20</item>
+        <item>計次一般費率,2,50</item>
+        <item>差別費率,3,80</item>
+        <item>累進費率,4,40</item>
+    </string-array>
+
+
+    <string-array name="car_type_lists">
+        <item>機車,1</item>
+        <item>汽車,2</item>
+    </string-array>
+
+    <string-array name="func">
+        <item>撥電話</item>
+        <item>發送郵件</item>
+        <item>傳送簡訊</item>
+        <item>網路通訊</item>
+        <item>Hangouts</item>
+        <item>導航</item>
+    </string-array>
 </resources>

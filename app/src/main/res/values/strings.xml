@@ -47,22 +47,9 @@
     <string name="camera1">拍攝</string>
     <string name="camera2">保存</string>
     <string name="camera3">取消</string>
-
     <!-- 開單 -->
     <string name="BilSP001">憑單種類</string>
-    <string-array name="BilSP001func">
-        <item>通知單,1</item>
-        <item>稽查單,2</item>
-        <item>告發單,3</item>
-    </string-array>
     <string name="BilSP002">費率選擇</string>
-    <string-array name="BilSP002func">
-        <item>計時一般費率,1,20</item>
-        <item>計次一般費率,2,50</item>
-        <item>差別費率,3,80</item>
-        <item>累進費率,4,40</item>
-    </string-array>
-
     <string name="BilTV001">車號:</string>
     <string name="BilTV002">停車日期:</string>
     <string name="BilTV002Y">年</string>
@@ -76,10 +63,7 @@
     <string name="BilTV008">停車時間</string>
     <string name="BilTV009">管理員簽章</string>
     <string name="BilTV010">車種:</string>
-    <string-array name="BilSP010func">
-        <item>機車,1</item>
-        <item>汽車,2</item>
-    </string-array>
+
     <string name="BilTV011">基本費率:</string>
     <string name="BilBT001">清除</string>
     <string name="BilBT002">儲存</string>
@@ -130,14 +114,7 @@
 
 
     <string name="function">聯繫選項</string>
-    <string-array name="func">
-        <item>撥電話</item>
-        <item>發送郵件</item>
-        <item>傳送簡訊</item>
-        <item>網路通訊</item>
-        <item>Hangouts</item>
-        <item>導航</item>
-    </string-array>
+
 
     <!--XMPP-->
     <string name="hello">Hello World, XPMM!</string>

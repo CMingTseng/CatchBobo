@@ -39,8 +39,7 @@
             android:layout_marginLeft="@dimen/login_textview_marginleft"
             android:text="@string/TV0021"
             android:textColor="@color/black"
-            android:textSize="@dimen/login_textsize"
-            android:visibility="gone" />
+            android:textSize="@dimen/login_textsize" />
 
 
         <EditText
@@ -50,8 +49,7 @@
             android:layout_marginLeft="@dimen/login_edittext_marginleft"
             android:layout_marginRight="@dimen/login_edittext_marginright"
             android:hint="@string/Hint1"
-            android:singleLine="true"
-            android:visibility="gone" />
+            android:singleLine="true" />
 
         <Button
             android:id="@+id/checkimei"
@@ -77,8 +75,7 @@
             android:layout_marginLeft="@dimen/login_textview_marginleft"
             android:text="@string/TV0022"
             android:textColor="@color/black"
-            android:textSize="@dimen/login_textsize"
-            android:visibility="gone" />
+            android:textSize="@dimen/login_textsize" />
 
         <EditText
             android:id="@+id/password"
@@ -88,7 +85,6 @@
             android:layout_marginLeft="@dimen/login_edittext_marginleft"
             android:layout_marginRight="@dimen/login_edittext_marginright"
             android:password="true"
-            android:visibility="gone"
             android:singleLine="true" />
     </LinearLayout>
 
@@ -103,7 +99,6 @@
         android:layout_marginRight="30dp"
         android:layout_marginTop="@dimen/login_password_login_margintop"
         android:text="@string/BT0027"
-        android:textColor="@color/black"
-        android:visibility="invisible" />
+        android:textColor="@color/black" />
 
 </RelativeLayout>
