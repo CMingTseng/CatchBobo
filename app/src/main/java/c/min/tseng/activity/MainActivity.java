@@ -25,13 +25,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        /**加載字庫,首先判斷字庫檔是否已創建     */
         final Context context = getBaseContext();
         new Thread(new Runnable() {
             @Override
             public void run() {
-                if (!FolderFileUtils.checkExternalFolderFileExist(File.separator + BuildConfig.OCRPHOTOFOLDER + File.separator + BuildConfig.OCRTESTDATAFOLDER)) {
-                    FolderFileUtils.createFolderFile(File.separator + BuildConfig.OCRPHOTOFOLDER + File.separator + BuildConfig.OCRTESTDATAFOLDER);
+                if (!FolderFileUtils.checkExternalFolderFileExist(File.separator + BuildConfig.OCRPHOTOFOLDER)) {
+                    FolderFileUtils.createFolderFile(File.separator + BuildConfig.OCRPHOTOFOLDER);
+                }
+                if (!FolderFileUtils.checkExternalFolderFileExist(File.separator + BuildConfig.OCRTESTDATAFOLDER)) {
+                    FolderFileUtils.createFolderFile(File.separator + BuildConfig.OCRTESTDATAFOLDER);
                 }
                 final ArrayList<File> folders = FolderFileUtils.getExternalStorageDirectorys(new ArrayList<File>());
                 File target = null;
@@ -42,9 +44,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 //http://stackoverflow.com/questions/15912825/how-to-read-file-from-res-raw-by-name
-//                Log.d(TAG,"Show name  :" +getResources().getIdentifier("FILENAME_WITHOUT_EXTENSION","raw", getPackageName());
-                //字庫檔未創建，判斷tessdata是否創建
-                //字庫檔案eng.traineddata，先創造eng.traineddata file並將內容導入
                 final File outFile = new File(target.toString(), "eng.traineddata");
                 if (!outFile.exists()) {
                     InputStream in = null;
