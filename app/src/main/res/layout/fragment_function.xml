@@ -1,158 +1,156 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/RL001"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/snow">
 
     <TextView
-        android:id="@+id/TVN001"
+        android:id="@+id/trafficwarden_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/TCBF001"
+        android:layout_centerHorizontal="true"
         android:textColor="@color/black"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tool:text="YOYOGIGI" />
 
     <TextView
-        android:id="@+id/TCBF001"
+        android:id="@+id/currenttime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10dp"
         android:textColor="@color/black"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        app:layout_constraintLeft_toRightOf="@+id/trafficwarden_name"
+        app:layout_constraintTop_toTopOf="parent"
+        tool:text="20:30" />
 
-    <c.min.tseng.Effect.MDigitalClock
-        android:id="@+id/TCBF002"
+    <EditText
+        android:id="@+id/sendmessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/TCBF001"
-        android:shadowColor="@android:color/white"
-        android:shadowRadius="2.0"
-        android:textColor="@color/black"
-        android:textSize="20sp">
-
-    </c.min.tseng.Effect.MDigitalClock>
-
-
-    <View
-        android:id="@+id/V001"
-        android:layout_width="1.0dip"
-        android:layout_height="fill_parent"
-        android:layout_centerHorizontal="true" />
+        android:singleLine="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.236"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/space"
+        app:layout_constraintVertical_bias="0.982" />
 
     <Button
-        android:id="@+id/BT001"
+        android:id="@+id/send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/V001"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="60dp"
-        android:background="@drawable/rectangleround"
-        android:text="@string/BT001" />
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp"
+        android:text="@string/BT008"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.945"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
-    <Button
-        android:id="@+id/BT002"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/receive"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/V001"
-        android:layout_marginTop="60dp"
-        android:background="@drawable/rectangleround"
-        android:text="@string/BT002" />
+        android:layout_marginBottom="73dp"
+        android:editable="false"
+        android:gravity="left|bottom"
+        android:hint="開班測試用帳號B001測試用密碼123456"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-
-    <Button
-        android:id="@+id/BT003"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/V001"
-        android:layout_below="@+id/BT001"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/rectangleround"
-        android:text="@string/BT003" />
-
-    <Button
-        android:id="@+id/BT004"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/V001"
-        android:layout_below="@+id/BT002"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/rectangleround"
-        android:text="@string/BT004" />
-
-    <Button
-        android:id="@+id/BT005"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/V001"
-        android:layout_below="@+id/BT003"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/rectangleround"
-        android:text="@string/BT005" />
-
-    <Button
-        android:id="@+id/BT006"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/V001"
-        android:layout_below="@+id/BT004"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/rectangleround"
-        android:text="@string/BT006" />
-
-    <Button
-        android:id="@+id/BTA001"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/BT005"
+    <Space
+        android:id="@+id/space"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/trafficwarden_name" />
+
+    <Button
+        android:id="@+id/checkin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rectangleround"
+        android:text="@string/BT001"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/space"
+        app:layout_constraintTop_toBottomOf="@+id/trafficwarden_name" />
+
+    <Button
+        android:id="@+id/traffic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rectangleround"
+        android:text="@string/BT002"
+        app:layout_constraintHorizontal_bias="0.069"
+        app:layout_constraintLeft_toRightOf="@+id/space"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/trafficwarden_name" />
+
+    <Button
+        android:id="@+id/inspection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/rectangleround"
+        android:text="@string/BT003"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/space"
+        app:layout_constraintTop_toBottomOf="@+id/checkin" />
+
+    <Button
+        android:id="@+id/statistics"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/rectangleround"
+        android:text="@string/BT004"
+        app:layout_constraintHorizontal_bias="0.069"
+        app:layout_constraintLeft_toRightOf="@+id/space"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/traffic" />
+
+    <Button
+        android:id="@+id/setting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/rectangleround"
+        android:text="@string/BT005"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/space"
+        app:layout_constraintTop_toBottomOf="@+id/inspection" />
+
+    <Button
+        android:id="@+id/logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/rectangleround"
+        android:text="@string/BT006"
+        app:layout_constraintHorizontal_bias="0.069"
+        app:layout_constraintLeft_toRightOf="@+id/space"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/statistics" />
+
+    <Button
+        android:id="@+id/advanced"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="142dp"
         android:background="@drawable/rectangleround"
         android:text="@string/BTA001"
-        android:visibility="gone" />
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/receive"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/CRLL0014"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_below="@+id/BT005"
-        android:orientation="vertical"
-        android:visibility="visible">
-
-        <EditText
-            android:id="@+id/CRET0013"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_weight="1"
-            android:editable="false"
-            android:gravity="left|bottom"
-            android:hint="開班測試用帳號B001測試用密碼123456" />
-
-        <RelativeLayout
-            android:id="@+id/CRRL0011"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <EditText
-                android:id="@+id/CRET0014"
-                android:layout_width="260dp"
-                android:layout_height="wrap_content"
-                android:singleLine="true" />
-
-            <Button
-                android:id="@+id/CRBT008"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/CRET0014"
-                android:text="@string/BT008" />
-
-        </RelativeLayout>
-
-
-    </LinearLayout>
-
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>
