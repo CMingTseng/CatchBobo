@@ -14,7 +14,6 @@ import android.media.ExifInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.TextureView;
 import android.view.View;
@@ -70,21 +69,16 @@ public class TakePhotoFragment extends Fragment implements TextureView.SurfaceTe
                         staffreport.setAltitudeRequired(false);
                         staffreport.setBearingRequired(false);
                         staffreport.setCostAllowed(false);
-                        //使用省電模式
                         staffreport.setPowerRequirement(Criteria.POWER_LOW);
-
                         final Camera.Parameters parameters = camera.getParameters();
                         parameters.removeGpsData();
                         parameters.setGpsTimestamp(System.currentTimeMillis() / 1000);
                         final Location location = locationMgr.getLastKnownLocation(locationMgr.getBestProvider(staffreport, true));
                         if (location != null) {
-                            Log.d(TAG, "Show Camera : " + location);
-                            double lat = location.getLatitude();
-                            double lon = location.getLongitude();
-                            boolean hasLatLon = (lat != 0.0d) || (lon != 0.0d);
-
+                            final double lat = location.getLatitude();
+                            final double lon = location.getLongitude();
+                            final boolean hasLatLon = (lat != 0.0d) || (lon != 0.0d);
                             if (hasLatLon) {
-                                Log.d(TAG, "Set gps location");
                                 parameters.setGpsLatitude(lat);
                                 parameters.setGpsLongitude(lon);
                                 parameters.setGpsProcessingMethod(location.getProvider().toUpperCase());
@@ -99,7 +93,7 @@ public class TakePhotoFragment extends Fragment implements TextureView.SurfaceTe
                                 if (location.getTime() != 0) {
                                     // Location.getTime() is UTC in milliseconds.
                                     // gps-timestamp is UTC in seconds.
-                                    long utcTimeSeconds = location.getTime() / 1000;
+                                    final long utcTimeSeconds = location.getTime() / 1000;
                                     parameters.setGpsTimestamp(utcTimeSeconds);
                                 }
                             }
@@ -113,12 +107,7 @@ public class TakePhotoFragment extends Fragment implements TextureView.SurfaceTe
                             }, null, new Camera.PictureCallback() {
                                 @Override
                                 public void onPictureTaken(final byte[] data, final Camera camera) {
-                                    new Thread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            savePhoto(data);
-                                        }
-                                    }).start();
+                                    savePhoto(data);
                                 }
                             });
                         }
@@ -177,12 +166,12 @@ public class TakePhotoFragment extends Fragment implements TextureView.SurfaceTe
                     @Override
                     public void run() {
                         try {
-                            if (!!FolderFileUtils.checkExternalFolderFileExist(File.separator + BuildConfig.OCRPHOTOFOLDER)) {
+                            if (!FolderFileUtils.checkExternalFolderFileExist(File.separator + BuildConfig.OCRPHOTOFOLDER)) {
                                 FolderFileUtils.createFolderFile(File.separator + BuildConfig.OCRPHOTOFOLDER);
                             }
                             final File newcarphoto = new File(FolderFileUtils.getSDPath(), File.separator + BuildConfig.OCRPHOTOFOLDER + File.separator + getDateTime() + BuildConfig.TEMPPHOTOFILE);
                             arguments.putString(C.PHOTO_PATH, newcarphoto.toString());
-                            FileOutputStream filestream = new FileOutputStream(newcarphoto);
+                            final FileOutputStream filestream = new FileOutputStream(newcarphoto);
                             bmp.compress(Bitmap.CompressFormat.JPEG, 100, filestream);
                             filestream.flush();
                             filestream.close();
@@ -198,9 +187,16 @@ public class TakePhotoFragment extends Fragment implements TextureView.SurfaceTe
                                 exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF, makeLonStringRef(lon));
                                 exif.saveAttributes();
                             }
-                            final BitmapFactory.Options options = new BitmapFactory.Options();
-                            options.inSampleSize = 2;
-                            Bitmap bmpt = BitmapFactory.decodeFile(newcarphoto.getAbsolutePath());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Bitmap bmpt = bmp;
                             int w = bmpt.getWidth();
                             int h = bmpt.getHeight();
                             int[] pixels = new int[w * h];
@@ -216,23 +212,23 @@ public class TakePhotoFragment extends Fragment implements TextureView.SurfaceTe
                             if (ocrphoto.exists()) {
                                 ocrphoto.delete();
                             }
-                            arguments.putString(C.OCR_PATH, ocrphoto.toString());
-                            filestream = new FileOutputStream(ocrphoto);
+                            final FileOutputStream filestream = new FileOutputStream(ocrphoto);
                             vB2.compress(Bitmap.CompressFormat.JPEG, 100, filestream);
                             filestream.flush();
                             filestream.close();
-                            final Fragment fragment = new BillingFragment();
-                            fragment.setArguments(arguments);
-                            getFragmentManager().beginTransaction()
-                                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out)
-                                    .addToBackStack(TakePhotoFragment.class.getSimpleName())
-                                    .replace(R.id.main_content, fragment)
-                                    .commit();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
                 }).start();
+                arguments.putString(C.OCR_PATH, FolderFileUtils.getSDPath() + File.separator + BuildConfig.OCRPHOTOFOLDER + File.separator + BuildConfig.OCRPHOTOFILE);
+                final Fragment fragment = new BillingFragment();
+                fragment.setArguments(arguments);
+                getFragmentManager().beginTransaction()
+                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out)
+                        .addToBackStack(TakePhotoFragment.class.getSimpleName())
+                        .replace(R.id.main_content, fragment)
+                        .commit();
             }
         }
     }
