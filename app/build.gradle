@@ -124,6 +124,10 @@ dependencies {
     compile "com.android.support:support-v13:${rootProject.ext.supportLibVersion}"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     //http://sjudd.github.io/glide/doc/download-setup.html#gradle
+    //https://github.com/bumptech/glide
+    //https://muzhi1991.gitbooks.io/android-glide-wiki/content/index.html
+    //http://www.codexiu.cn/android/blog/21429/
+    //http://blog.csdn.net/RichieZhu/article/details/46968569
     compile 'com.github.bumptech.glide:glide:+'
     compile 'utils.neo.idv:utils:+'
     compile 'org.igniterealtime.smack:smack:3.2.1'
