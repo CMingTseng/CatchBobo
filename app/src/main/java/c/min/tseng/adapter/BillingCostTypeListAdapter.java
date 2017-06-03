@@ -47,13 +47,15 @@ public class BillingCostTypeListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        final Context context = parent.getContext();
+        final Resources res = context.getResources();
         if (convertView == null) {
             convertView = View.inflate(parent.getContext(), android.R.layout.simple_spinner_dropdown_item, null);
             final ViewHolder holder = new ViewHolder(convertView);
             convertView.setTag(R.id.tag_view_holder, holder);
         }
         final ViewHolder holder = (ViewHolder) convertView.getTag(R.id.tag_view_holder);
-        holder.mName.setText(getItem(position));
+        holder.mName.setText(res.getString(R.string.BilSP002, getItem(position)));
         return convertView;
     }
 
