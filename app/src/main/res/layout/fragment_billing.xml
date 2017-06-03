@@ -1,360 +1,167 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/aliceblue"
-    android:orientation="vertical">
+    android:background="@color/snow">
 
-    <LinearLayout
-        android:id="@+id/BilLL001"
+
+    <TextView
+        android:id="@+id/car_hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:orientation="horizontal">
+        android:text="@string/BilTV001"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/black"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TableRow
-            android:id="@+id/BilTB011"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <Spinner
-                android:id="@+id/BilSP001"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@color/red" />
-
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/BilTB012"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <Spinner
-                android:id="@+id/BilSP002"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@color/red" />
-
-        </TableRow>
-
-    </LinearLayout>
-
-    <TableRow
-        android:id="@+id/BilTB001"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/BilTV001"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="@string/BilTV001"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/black" />
-
-        <EditText
-            android:id="@+id/BilET0011"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:textColor="@color/black" />
-
-        <TextView
-            android:id="@+id/BilTV001N"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="-"
-            android:textColor="@color/black"
-            android:textSize="20dp"
-            android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/BilET0012"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:textColor="@color/black" />
-
-    </TableRow>
-
-
-    <TableRow
-        android:id="@+id/BilTB002"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/BilTV002"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/BilTV002"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/black" />
-
-        <EditText
-            android:id="@+id/BilET002"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="@color/black" />
-
-        <TextView
-            android:id="@+id/BilTV002Y"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/BilTV002Y"
-            android:textColor="@color/black"
-            android:layout_weight="1"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <EditText
-            android:id="@+id/BilET0021"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="@color/black" />
-
-        <TextView
-            android:id="@+id/BilTV002M"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/BilTV002M"
-            android:textColor="@color/black"
-            android:layout_weight="1"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <EditText
-            android:id="@+id/BilET0022"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="@color/black" />
-
-        <TextView
-            android:id="@+id/BilTV002D"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/BilTV002D"
-            android:textColor="@color/black"
-            android:layout_weight="1"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    </TableRow>
-
-    <TableRow
-        android:id="@+id/BilTB003"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/vehicle_registration_plate"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone">
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/black"
+        app:layout_constraintLeft_toRightOf="@+id/car_hint"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tool:text="QQ-6655" />
 
-        <TextView
-            android:id="@+id/BilTV003"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/BilTV003"
-            android:textColor="@color/black"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <EditText
-            android:id="@+id/BilET003"
-            android:layout_width="match_parent"
-            android:textColor="@color/black"
-            android:layout_height="wrap_content" />
-
-    </TableRow>
-
-    <TableRow
-        android:id="@+id/BilTB004"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/BilTV004"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/BilTV004"
-            android:textColor="@color/black"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <EditText
-            android:id="@+id/BilET004"
-            android:textColor="@color/black"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </TableRow>
-
-    <TableRow
-        android:id="@+id/BilTB005"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/BilTV010"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/BilTV010"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/black" />
-
-        <Spinner
-            android:id="@+id/BilSP010func"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/red" />
-
-        <TextView
-            android:id="@+id/BilTV011"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/BilTV011"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/black" />
-
-        <TextView
-            android:id="@+id/BilTV012"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/black" />
-
-    </TableRow>
-
-    <TableRow
-        android:id="@+id/BilTB006"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/BilTV006"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/BilTV006"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/black" />
-
-        <EditText
-            android:id="@+id/BilET0061"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="@color/black" />
-
-        <TextView
-            android:id="@+id/BilTV006Y"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/BilTV002Y"
-            android:textColor="@color/black"
-            android:layout_weight="1"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <EditText
-            android:id="@+id/BilET0062"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="@color/black" />
-
-        <TextView
-            android:id="@+id/BilTV006M"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/BilTV002M"
-            android:textColor="@color/black"
-            android:layout_weight="1"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <EditText
-            android:id="@+id/BilET0063"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="@color/black" />
-
-        <TextView
-            android:id="@+id/BilTV006D"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/BilTV002D"
-            android:textColor="@color/black"
-            android:layout_weight="1"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    </TableRow>
-
-    <LinearLayout
-        android:id="@+id/BilLL002"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/parkingtate_hint"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="horizontal">
+        android:text="@string/BilTV002"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/black"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/car_hint" />
 
-        <Button
-            android:visibility="invisible"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center|fill" />
+    <TextView
+        android:id="@+id/parkingtate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/black"
+        app:layout_constraintBaseline_toBaselineOf="@+id/parkingtate_hint"
+        app:layout_constraintLeft_toRightOf="@+id/parkingtate_hint"
+        app:layout_constraintRight_toRightOf="parent"
+        tool:text="2017年5月26日" />
 
-        <Button
-            android:id="@+id/BilBT001"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center|fill"
-            android:text="@string/BilBT001" />
+    <TextView
+        android:id="@+id/road_section_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/BilTV004"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/black"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/parkingtate_hint" />
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center|fill"
-            android:visibility="invisible" />
+    <TextView
+        android:id="@+id/road_section"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/black"
+        app:layout_constraintBaseline_toBaselineOf="@+id/road_section_hint"
+        app:layout_constraintLeft_toRightOf="@+id/road_section_hint"
+        app:layout_constraintRight_toRightOf="parent"
+        tool:text="台北忠孝東路3段285號" />
 
-        <Button
-            android:id="@+id/BilBT002"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center|fill"
-            android:text="@string/BilBT002" />
+    <Space
+        android:id="@+id/space_split"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/road_section" />
 
-        <Button
-            android:visibility="invisible"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center|fill" />
+    <Spinner
+        android:id="@+id/car_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="@id/space_split"
+        app:layout_constraintTop_toBottomOf="@id/road_section_hint" />
 
-        <Button
-            android:id="@+id/BilBT003"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center|fill"
-            android:text="@string/BilBT003" />
+    <Spinner
+        android:id="@+id/cost_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBaseline_creator="@+id/car_type"
+        app:layout_constraintHorizontal_bias="0.566"
+        app:layout_constraintLeft_toRightOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/space_split"
+        app:layout_constraintTop_toBottomOf="@+id/road_section" />
 
-        <Button
-            android:visibility="invisible"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center|fill" />
+    <TextView
+        android:id="@+id/payment_deadline_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/BilTV006"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/black"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/car_type" />
 
-    </LinearLayout>
+    <TextView
+        android:id="@+id/payment_deadline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/black"
+        app:layout_constraintBaseline_toBaselineOf="@id/payment_deadline_hint"
+        app:layout_constraintLeft_toRightOf="@id/payment_deadline_hint"
+        app:layout_constraintRight_toRightOf="parent"
+        tool:text="2017年6月25日" />
 
-</LinearLayout>
+    <Button
+        android:id="@+id/save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/BilBT002"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <Button
+        android:id="@+id/clear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/BilBT001"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/save" />
+
+
+    <Button
+        android:id="@+id/previous"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/BilBT003"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/save"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <ImageView
+        android:id="@+id/vehicle_registration_plate_photo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/payment_deadline"
+        tool:srcCompat="@drawable/common_signin_btn_icon_dark" />
+
+    <ImageView
+        android:id="@+id/car_photo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/save"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/vehicle_registration_plate_photo"
+        tool:srcCompat="@drawable/booked" />
+
+</android.support.constraint.ConstraintLayout>

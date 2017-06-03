@@ -10,108 +10,35 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import c.min.tseng.C;
 import c.min.tseng.R;
+import c.min.tseng.adapter.BillingCostTypeListAdapter;
+import c.min.tseng.adapter.TransportTypeListAdapter;
 import idv.neo.utils.GetOCRResultTask;
 
 public class BillingFragment extends Fragment {
     private final static String TAG = "BillingFragment";
     //OCR處理部分
     private static String LANGUAGE = "eng";
-//public class BillingFragment extends Activity implements SurfaceHolder.Callback {
-//public class BillingFragment extends Activity implements LocationListener {
-
-//    ////////多執行緒-Handler和Thread  ///////////////////////
-//    //透過公會找到U成員的經紀人，這樣才能派遣工作? (找到顯示畫面的UI Thread上的Handler)
-//    private Handler mUI_Handler = new Handler();
-//    private Handler mThreadHandler; ///宣告臨時工的經紀人
-//    private HandlerThread mThread; ///宣告臨時工
-//    ///////////////////////////////////////////////////////////////////////////////////////
-//    //SQLlite處理變數
-//    private static final String DB_FILE1 = "auth.db", DB_TABLE11 = "auth", DB_FILE2 = "company.db", DB_TABLE21 = "company", DB_FILE4 = "BillingFragment.db", DB_TABLE41 = "BillingFragment";
-//    private SQLiteDatabase haHelp, coHelp, gpsHelp, BillHelp;
-//    private DbHelper BillDbHp;
-//
-//
-//    //
-//    public SimpleDateFormat sdf;
-//
-//
-//    //手機用變數
-//    TelephonyManager Tel;
-//    WifiManager mowifi;
-//    //個人資料變數
-////    private String strMyName;
-//    private String strMyUid; // uid
-//    private String strMyGrp;
-//    private String billname;
-//    private String strMyTel; // tel
-//    private String strMyEmail;
-//    //    private String strMystate;
-//    private int strMystate;
-//    private String myimei;
-//
-//    // 引導其他class
-//    Intent printerB = new Intent(), fragment_function = new Intent(), fragment_takephoto = new Intent(), inspect = new Intent(), search = new Intent(), setting = new Intent(), adminmap = new Intent(), fragment_billing = new Intent();
-//
-//
-//    public static String[] authMatix;
-//
-//
-//    //location
-//    private LocationManager mLocationMgr;
-//    private Location Billloca;
-//    private String mBestLocationProv;
-//    //  private Location staffloc;
-//    static double dLat, dLon, tLat, tLng;
-//    private String newUpdate = "";
-//    private String newUpdate2 = "";
-//
-//
-//    private Context mContext;
-//    //存放Spinner選擇後變數
-//    public String Voucher, Rate, RateC, Models;
-//    public String[] BilSP001funcas, BilSP002funcas, BilSP010funcas;
-//    public String[] BilSP001funcast, BilSP002funcast, BilSP010funcast;
-//    public String[] Vouchert, Ratet, RateCt, Modelst;
-//
-//    //切割資料用
-//    private String[] CarNO, BillingTime, OverdueTime; //放置車號年月日時間用
-//    //承接跨class的值用的變數--跨class有authData.strMyName.Loccalreport
-//    private String Toll;
-//    private String updataurl;
-//    //開單用變數
-//    //取得當前GPS點位與
-//    double lngBill, latBill;
-//    static String NowPT;
-//
-//    //開單填入資訊
-//    public static String nBilET0011, nBilET0012, nBilET002, nBilET0021, nBilET0022, nBilET003, nBilET004, nBilET0061, nBilET0062, nBilET0063, nBilSP001, nBilSP002, nBilSP010func, nBilSP0011, nBilSP0012, nBilSP0021, nBilSP0022, nBilSP010func1, nBilSP010func2, nBilTime;
-//
-//
-//    ////////////////////////
-//
-//
-//    private LinearLayout BilLL001;
-//
-//    private Spinner BilSP001, BilSP002, BilSP010func;
-//
-//    private TableRow BilTB001, BilTB002, BilTB003, BilTB004, BilTB005, BilTB006, BilTB007, BilTB0081, BilTB0091;
-//
-//    private TextView BilTV001, BilTV001N, BilTV002, BilTV002Y, BilTV002M, BilTV002D, BilTV003, BilTV004, BilTV006, BilTV006Y, BilTV006M, BilTV006D, BilTV0071, BilTV0072, BilTV0081, BilTV0082, BilTV0091, BilTV0092, BilTV010, BilTV011, BilTV012;
-//
-//    private EditText BilET0011, BilET0012, BilET002, BilET0021, BilET0022, BilET003, BilET004, BilET0061, BilET0062, BilET0063;
-//
-//    private Button BilBT001, BilBT002, BilBT003;
-//
-//    private static String[] BilSP001funca, BilSP002funca, BilSP010funca;
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(final Context context) {
         super.onAttach(context);
         onHiddenChanged(false);
-        final Bundle arguments = getArguments();
+        Glide.get(context).clearMemory();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Glide.get(context).clearDiskCache();
+            }
+        }).start();
     }
 
     @Override
@@ -122,117 +49,33 @@ public class BillingFragment extends Fragment {
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
 
         final View child = inflater.inflate(R.layout.fragment_billing, container, false);
+        final TextView vehicle_registration_plate = (TextView) child.findViewById(R.id.vehicle_registration_plate);
+        final TextView parkingtate = (TextView) child.findViewById(R.id.parkingtate);
+        final TextView road_section = (TextView) child.findViewById(R.id.road_section);
+
+        final Spinner car_type = (Spinner) child.findViewById(R.id.car_type);
+        car_type.setAdapter(new TransportTypeListAdapter(context));
+        final Spinner cost_type = (Spinner) child.findViewById(R.id.cost_type);
+        cost_type.setAdapter(new BillingCostTypeListAdapter(context));
+        final TextView payment_deadline = (TextView) child.findViewById(R.id.payment_deadline);
+
+        final ImageView vehicle_registration_plate_photo = (ImageView) child.findViewById(R.id.vehicle_registration_plate_photo);
+        Glide.with(context).load(arguments.getString(C.OCR_PATH)).into(vehicle_registration_plate_photo);
+        final ImageView car_photo = (ImageView) child.findViewById(R.id.car_photo);
+        Glide.with(context).load(arguments.getString(C.PHOTO_PATH)).into(car_photo);
+
+        final Button clear = (Button) child.findViewById(R.id.clear);
+        final Button save = (Button) child.findViewById(R.id.save);
+        final Button previous = (Button) child.findViewById(R.id.previous);
         new GetOCRResultTask(new GetOCRResultTask.OnTaskCompleted() {
             @Override
             public void onTaskCompleted(String result) {
                 Log.d(TAG, "Show  onTaskCompleted : " + result);
+                vehicle_registration_plate.setText(result);
 
             }
         }).execute(BitmapFactory.decodeFile(arguments.getString(C.OCR_PATH), options), LANGUAGE);
-//        BilLL001 = (LinearLayout) child.findViewById(R.id.TCBF001);
 
-//        BilSP001 = (Spinner) child.findViewById(R.id.BilSP001);
-//        BilSP002 = (Spinner) child.findViewById(R.id.BilSP002);
-//        BilSP010func = (Spinner) child.findViewById(R.id.BilSP010func);
-//
-//        BilTB001 = (TableRow) child.findViewById(R.id.BilTB001);
-//        BilTB002 = (TableRow) child.findViewById(R.id.BilTB002);
-//        BilTB003 = (TableRow) child.findViewById(R.id.BilTB003);
-//        BilTB004 = (TableRow) child.findViewById(R.id.BilTB004);
-//        BilTB005 = (TableRow) child.findViewById(R.id.BilTB005);
-//        BilTB006 = (TableRow) child.findViewById(R.id.BilTB006);
-//
-//
-//        BilTV001 = (TextView) child.findViewById(R.id.BilTV001);
-//        BilTV001N = (TextView) child.findViewById(R.id.BilTV001N);
-//        BilTV002 = (TextView) child.findViewById(R.id.BilTV002);
-//        BilTV002Y = (TextView) child.findViewById(R.id.BilTV002Y);
-//        BilTV002M = (TextView) child.findViewById(R.id.BilTV002M);
-//        BilTV002D = (TextView)child.findViewById(R.id.BilTV002D);
-//        BilTV003 = (TextView) child.findViewById(R.id.BilTV003);
-//        BilTV004 = (TextView) child.findViewById(R.id.BilTV004);
-//        BilTV006 = (TextView) child.findViewById(R.id.BilTV006);
-//        BilTV006Y = (TextView) child.findViewById(R.id.BilTV006Y);
-//        BilTV006M = (TextView) child.findViewById(R.id.BilTV006M);
-//        BilTV006D = (TextView) child.findViewById(R.id.BilTV006D);
-//        BilTV010 = (TextView) child.findViewById(R.id.BilTV010);
-//        BilTV011 = (TextView) child.findViewById(R.id.BilTV011);
-//        BilTV012 = (TextView) child.findViewById(R.id.BilTV012);
-//
-//        BilET0011 = (EditText) child.findViewById(R.id.BilET0011);
-//        BilET0012 = (EditText) child.findViewById(R.id.BilET0012);
-//        BilET002 = (EditText) child.findViewById(R.id.BilET002);
-//        BilET0021 = (EditText) child.findViewById(R.id.BilET0021);
-//        BilET0022 = (EditText) child.findViewById(R.id.BilET0022);
-//        BilET003 = (EditText) child.findViewById(R.id.BilET003);
-//        BilET004 = (EditText) child.findViewById(R.id.BilET004);
-//        BilET0061 = (EditText) child.findViewById(R.id.BilET0061);
-//        BilET0062 = (EditText) child.findViewById(R.id.BilET0062);
-//        BilET0063 = (EditText) child.findViewById(R.id.BilET0063);
-//        BilBT001 = (Button) child.findViewById(R.id.BilBT001);
-//        BilBT002 = (Button)child.findViewById(R.id.BilBT002);
-//        BilBT003 = (Button) child.findViewById(R.id.BilBT003);
-
-//        BilBT001.setOnClickListener(BilBT001Clk);
-//        BilBT002.setOnClickListener(BilBT002Clk);
-//        BilBT003.setOnClickListener(BilBT003Clk);
-//
-////		Spinner資料array的處理.宣告取得array資源
-//        BilSP001funca = getResources().getStringArray(R.array.BilSP001func);
-//        BilSP002funca = getResources().getStringArray(R.array.BilSP002func);
-//        BilSP010funca = getResources().getStringArray(R.array.BilSP010func);
-//        //***********************************憑單種類Spinner資料*******************************************//
-//        //設定憑單種類Spinner的樣式內容
-//        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this, R.layout.myspinner);
-//        //分割地區字串陣列,長度為6,為0到5,將每個字串的位置[0]的值,也就是 "中區職訓"."台灣大學"等等....存到adapter
-//        for (int i = 0; i < BilSP001funca.length; i++) {
-//            BilSP001funcas = BilSP001funca[i].split(",");
-//            adapter1.add(BilSP001funcas[0]);
-//
-//
-//        }
-//        //設定Spinner的樣式內容      費率選擇車種
-//        adapter1.setDropDownViewResource(R.layout.myspinner);
-//        //將設定好的adapter的內容給予Spinner物件
-//        BilSP001.setAdapter(adapter1);
-//        //做Spinner的監聽器
-//        BilSP001.setOnItemSelectedListener(BilSP001OnItemSelLis);//憑單種類的Listener
-//        //*******************************************************************************************//
-//
-//        //***********************************費率種類Spinner資料*******************************************//
-//        //設定費率種類Spinner的樣式內容
-//        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this, R.layout.myspinner);
-//        //分割地區字串陣列,長度為6,為0到5,將每個字串的位置[0]的值,也就是 "中區職訓"."台灣大學"等等....存到adapter
-//        for (int i = 0; i < BilSP002funca.length; i++) {
-//            BilSP002funcas = BilSP002funca[i].split(",");
-//            adapter2.add(BilSP002funcas[0]);
-//
-//        }
-//        //設定Spinner的樣式內容
-//        adapter2.setDropDownViewResource(R.layout.myspinner);
-//        //將設定好的adapter的內容給予Spinner物件
-//        BilSP002.setAdapter(adapter2);
-//        //做Spinner的監聽器
-//        BilSP002.setOnItemSelectedListener(BilSP002OnItemSelLis);//憑單種類的Listener
-//        //*******************************************************************************************//
-//
-//
-//        //***********************************車種Spinner資料*******************************************//
-//        //設定車種Spinner的樣式內容
-//        ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(this, R.layout.myspinner);
-//        //分割地區字串陣列,長度為6,為0到5,將每個字串的位置[0]的值,也就是 "中區職訓"."台灣大學"等等....存到adapter
-//        for (int i = 0; i < BilSP010funca.length; i++) {
-//            BilSP010funcas = BilSP010funca[i].split(",");
-//            adapter3.add(BilSP010funcas[0]);
-//
-//        }
-//        //設定Spinner的樣式內容
-//        adapter3.setDropDownViewResource(R.layout.myspinner);
-//        //將設定好的adapter的內容給予Spinner物件
-//        BilSP010func.setAdapter(adapter3);
-//        //做Spinner的監聽器
-//        BilSP010func.setOnItemSelectedListener(BilSP010OnItemSelLis);//憑單種類的Listener
-//        //*******************************************************************************************//
 
         return child;
     }
