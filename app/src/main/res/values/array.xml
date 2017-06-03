@@ -7,24 +7,22 @@
         <item>台中市宜居天堂, https://www.pcdvd.com.tw/showthread.php?t=1129322</item>
     </string-array>
 
-
     <string-array name="billing_type_lists">
-        <item>通知單,1</item>
-        <item>稽查單,2</item>
-        <item>告發單,3</item>
+        <item>通知單</item>
+        <item>稽查單</item>
+        <item>告發單</item>
     </string-array>
 
     <string-array name="billing_cost_ype_lists">
-        <item>計時一般費率,1,20</item>
-        <item>計次一般費率,2,50</item>
-        <item>差別費率,3,80</item>
-        <item>累進費率,4,40</item>
+        <item>計時一般費率,20</item>
+        <item>計次一般費率,50</item>
+        <item>差別費率,80</item>
+        <item>累進費率,40</item>
     </string-array>
 
-
     <string-array name="car_type_lists">
-        <item>機車,1</item>
-        <item>汽車,2</item>
+        <item>機車</item>
+        <item>汽車</item>
     </string-array>
 
     <string-array name="func">

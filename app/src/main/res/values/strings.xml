@@ -50,19 +50,19 @@
     <!-- 開單 -->
     <string name="BilSP001">憑單種類</string>
     <string name="BilSP002">費率選擇</string>
-    <string name="BilTV001">車號:</string>
-    <string name="BilTV002">停車日期:</string>
+    <string name="BilTV001">車號 :</string>
+    <string name="BilTV002">停車日期 :</string>
     <string name="BilTV002Y">年</string>
     <string name="BilTV002M">月</string>
     <string name="BilTV002D">日</string>
-    <string name="BilTV003">開單日期:</string>
-    <string name="BilTV004">路段:</string>
-    <string name="BilTV005">格位編號:</string>
-    <string name="BilTV006">繳費截止日期:</string>
+    <string name="BilTV003">開單日期 :</string>
+    <string name="BilTV004">路段 :</string>
+    <string name="BilTV005">格位編號 :</string>
+    <string name="BilTV006">繳費截止日期 :</string>
     <string name="BilTV007">繳費金額</string>
     <string name="BilTV008">停車時間</string>
     <string name="BilTV009">管理員簽章</string>
-    <string name="BilTV010">車種:</string>
+    <string name="BilTV010">車種 :</string>
 
     <string name="BilTV011">基本費率:</string>
     <string name="BilBT001">清除</string>
