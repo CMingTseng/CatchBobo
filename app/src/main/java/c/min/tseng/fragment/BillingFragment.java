@@ -3,6 +3,11 @@ package c.min.tseng.fragment;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Criteria;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,16 +22,20 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.List;
+import java.util.Locale;
+
 import c.min.tseng.C;
 import c.min.tseng.R;
 import c.min.tseng.adapter.BillingCostTypeListAdapter;
 import c.min.tseng.adapter.TransportTypeListAdapter;
+import idv.neo.utils.DateTimeUtils;
 import idv.neo.utils.GetOCRResultTask;
 
 public class BillingFragment extends Fragment {
     private final static String TAG = "BillingFragment";
-    //OCR處理部分
-    private static String LANGUAGE = "eng";
+    private TextView mVehicle_registration_plate;
+    private TextView mRoad_section;
 
     @Override
     public void onAttach(final Context context) {
@@ -45,13 +54,11 @@ public class BillingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final Context context = container.getContext();
         final Bundle arguments = getArguments();
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-
         final View child = inflater.inflate(R.layout.fragment_billing, container, false);
-        final TextView vehicle_registration_plate = (TextView) child.findViewById(R.id.vehicle_registration_plate);
+        mVehicle_registration_plate = (TextView) child.findViewById(R.id.vehicle_registration_plate);
         final TextView parkingtate = (TextView) child.findViewById(R.id.parkingtate);
-        final TextView road_section = (TextView) child.findViewById(R.id.road_section);
+        parkingtate.setText(DateTimeUtils.getlongTimeToString(System.currentTimeMillis(), null));
+        mRoad_section = (TextView) child.findViewById(R.id.road_section);
 
         final Spinner car_type = (Spinner) child.findViewById(R.id.car_type);
         car_type.setAdapter(new TransportTypeListAdapter(context));
@@ -65,17 +72,22 @@ public class BillingFragment extends Fragment {
         Glide.with(context).load(arguments.getString(C.PHOTO_PATH)).into(car_photo);
 
         final Button clear = (Button) child.findViewById(R.id.clear);
+        clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mVehicle_registration_plate.setText(null);
+                parkingtate.setText(null);
+                mRoad_section.setText(null);
+            }
+        });
         final Button save = (Button) child.findViewById(R.id.save);
         final Button previous = (Button) child.findViewById(R.id.previous);
-        new GetOCRResultTask(new GetOCRResultTask.OnTaskCompleted() {
+        previous.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onTaskCompleted(String result) {
-                Log.d(TAG, "Show  onTaskCompleted : " + result);
-                vehicle_registration_plate.setText(result);
-
+            public void onClick(View v) {
+                getFragmentManager().popBackStackImmediate();
             }
-        }).execute(BitmapFactory.decodeFile(arguments.getString(C.OCR_PATH), options), LANGUAGE);
-
+        });
 
         return child;
     }
@@ -83,6 +95,31 @@ public class BillingFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        final Context context = getContext();
+        final Bundle arguments = getArguments();
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        new GetOCRResultTask(new GetOCRResultTask.OnTaskCompleted() {
+            @Override
+            public void onTaskCompleted(String result) {
+                mVehicle_registration_plate.setText(result);
+            }
+        }).execute(BitmapFactory.decodeFile(arguments.getString(C.OCR_PATH), options), "eng");
+        final LocationManager locationMgr = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        final Criteria staffreport = new Criteria();
+        staffreport.setAccuracy(Criteria.ACCURACY_FINE);
+        staffreport.setAltitudeRequired(false);
+        staffreport.setBearingRequired(false);
+        staffreport.setCostAllowed(false);
+        staffreport.setPowerRequirement(Criteria.POWER_LOW);
+        final Location location = locationMgr.getLastKnownLocation(locationMgr.getBestProvider(staffreport, true));
+        final Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+        try {
+            final List<Address> ListAddr = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            mRoad_section.setText(ListAddr.get(0).getThoroughfare());
+        } catch (Exception e) {
+            Log.d(TAG, "Geocoder error : " + e.toString());
+        }
     }
 //
 //    @Override
@@ -107,7 +144,7 @@ public class BillingFragment extends Fragment {
 ////        Log.d("BBBBName2", billname);
 //
 //        //取得位置
-//        mLocationMgr = (LocationManager) getSystemService(LOCATION_SERVICE);
+//        locationMgr = (LocationManager) getSystemService(LOCATION_SERVICE);
 //        //實例化一個Criteria
 //        Criteria staffreport = new Criteria();
 //        //獲得最好的定位效果
@@ -119,8 +156,8 @@ public class BillingFragment extends Fragment {
 //        staffreport.setPowerRequirement(Criteria.POWER_LOW);
 //
 //        //獲得能提供當前位置的提供者
-//        mBestLocationProv = mLocationMgr.getBestProvider(staffreport, true);
-//        Location staffloca = mLocationMgr.getLastKnownLocation(mBestLocationProv);
+//        mBestLocationProv = locationMgr.getBestProvider(staffreport, true);
+//        Location staffloca = locationMgr.getLastKnownLocation(mBestLocationProv);
 //        getDateTime();
 //        setContentView(R.layout.fragment_billing);
 //        //設定SQLite管理者
@@ -249,7 +286,7 @@ public class BillingFragment extends Fragment {
 //        BilET0062.setText(OverdueTime[1]);
 //        BilET0063.setText(OverdueTime[2]);//EditText設定開單時間
 //        //經緯度反解
-//        Location staffloca = mLocationMgr.getLastKnownLocation(mBestLocationProv);
+//        Location staffloca = locationMgr.getLastKnownLocation(mBestLocationProv);
 //        Geocoder geocoder = new Geocoder(BillingFragment.this, Locale.getDefault());
 //        latBill = staffloca.getLatitude();
 //        lngBill = staffloca.getLongitude();
@@ -476,7 +513,7 @@ public class BillingFragment extends Fragment {
 //    @Override
 //    public void onProviderEnabled(String provider) {
 //        // TODO Auto-generated method stub
-//        mLocationMgr.requestLocationUpdates(mBestLocationProv, 120000, 60, this);//60秒或1公尺
+//        locationMgr.requestLocationUpdates(mBestLocationProv, 120000, 60, this);//60秒或1公尺
 //
 //    }
 //
@@ -489,7 +526,7 @@ public class BillingFragment extends Fragment {
 //    @Override
 //    protected void onStop() {
 //        // TODO Auto-generated method stub
-//        mLocationMgr.removeUpdates(this);
+//        locationMgr.removeUpdates(this);
 //        super.onStop();
 //    }
 //
@@ -497,7 +534,7 @@ public class BillingFragment extends Fragment {
 //    protected void onResume() {
 //        // TODO Auto-generated method stub
 //        super.onResume();
-//        mLocationMgr.requestLocationUpdates(mBestLocationProv, 120000, 60, this);//60秒或1公尺
+//        locationMgr.requestLocationUpdates(mBestLocationProv, 120000, 60, this);//60秒或1公尺
 //    }
 //
 //
