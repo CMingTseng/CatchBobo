@@ -28,9 +28,10 @@ public class ParkingTicket {
 
     public static final int VALUATION_TYPE_STABLE = 0;
     public static final int VALUATION_TYPE_PROGRESSIVE = 1;
+    public static final int VALUATION_TYPE_PENALTY = 2;
 
     @IntDef({
-            VALUATION_TYPE_STABLE, VALUATION_TYPE_PROGRESSIVE,
+            VALUATION_TYPE_STABLE, VALUATION_TYPE_PROGRESSIVE, VALUATION_TYPE_PENALTY,
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface Valuation_Type {
