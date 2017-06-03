@@ -10,7 +10,6 @@ import android.hardware.Camera;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
-import android.media.ExifInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -23,7 +22,6 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -32,6 +30,7 @@ import c.min.tseng.BuildConfig;
 import c.min.tseng.C;
 import c.min.tseng.R;
 import idv.neo.utils.FolderFileUtils;
+import idv.neo.utils.SaveBitmapToFileTask;
 import idv.neo.widget.Guides;
 
 public class TakePhotoFragment extends Fragment implements TextureView.SurfaceTextureListener {
@@ -162,73 +161,43 @@ public class TakePhotoFragment extends Fragment implements TextureView.SurfaceTe
             if (!FolderFileUtils.checkSDCardExist()) {
                 Toast.makeText(context, "SD卡不存在!無法保存相片,請插入SD卡。", Toast.LENGTH_LONG).show();
             } else {
-                new Thread(new Runnable() {
+                if (!FolderFileUtils.checkExternalFolderFileExist(File.separator + BuildConfig.OCRPHOTOFOLDER)) {
+                    FolderFileUtils.createFolderFile(File.separator + BuildConfig.OCRPHOTOFOLDER);
+                }
+                final File newcarphoto = new File(FolderFileUtils.getSDPath(), File.separator + BuildConfig.OCRPHOTOFOLDER + File.separator + getDateTime() + BuildConfig.TEMPPHOTOFILE);
+                new SaveBitmapToFileTask(new SaveBitmapToFileTask.OnTaskCompleted() {
                     @Override
-                    public void run() {
-                        try {
-                            if (!FolderFileUtils.checkExternalFolderFileExist(File.separator + BuildConfig.OCRPHOTOFOLDER)) {
-                                FolderFileUtils.createFolderFile(File.separator + BuildConfig.OCRPHOTOFOLDER);
-                            }
-                            final File newcarphoto = new File(FolderFileUtils.getSDPath(), File.separator + BuildConfig.OCRPHOTOFOLDER + File.separator + getDateTime() + BuildConfig.TEMPPHOTOFILE);
-                            arguments.putString(C.PHOTO_PATH, newcarphoto.toString());
-                            final FileOutputStream filestream = new FileOutputStream(newcarphoto);
-                            bmp.compress(Bitmap.CompressFormat.JPEG, 100, filestream);
-                            filestream.flush();
-                            filestream.close();
-                            if (location != null) {
-                                final ExifInterface exif = new ExifInterface(newcarphoto.getCanonicalPath());
-                                final double lat = location.getLatitude();
-                                final double lon = location.getLongitude();
-                                final String lats = makeLatLongString(lat);
-                                final String longs = makeLatLongString(lon);
-                                exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE, lats);
-                                exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE_REF, makeLatStringRef(lat));
-                                exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, longs);
-                                exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF, makeLonStringRef(lon));
-                                exif.saveAttributes();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                    public void onTaskCompleted(String s) {
+                        arguments.putString(C.PHOTO_PATH, s);
                     }
-                }).start();
-                new Thread(new Runnable() {
+                }).execute(bmp, newcarphoto, location, Bitmap.CompressFormat.JPEG, 100);
+                final File ocrphoto = new File(FolderFileUtils.getSDPath(), File.separator + BuildConfig.OCRPHOTOFOLDER + File.separator + BuildConfig.OCRPHOTOFILE);
+                Bitmap bmpt = bmp;
+                int w = bmpt.getWidth();
+                int h = bmpt.getHeight();
+                int[] pixels = new int[w * h];
+                for (int i = 0; i < w * h; i++) {
+                    pixels[i] = -1000000;
+                }
+                bmpt.getPixels(pixels, 0, w, w / 2, 0, 300, h);
+                bmpt = Bitmap.createBitmap(pixels, 0, w, 300, h, Bitmap.Config.ARGB_8888);
+                final Matrix matrix = new Matrix();
+                matrix.setRotate(90);
+                final Bitmap vB2 = Bitmap.createBitmap(bmpt, 0, 0, bmpt.getWidth(), bmpt.getHeight(), matrix, true);
+                new SaveBitmapToFileTask(new SaveBitmapToFileTask.OnTaskCompleted() {
                     @Override
-                    public void run() {
-                        try {
-                            Bitmap bmpt = bmp;
-                            int w = bmpt.getWidth();
-                            int h = bmpt.getHeight();
-                            int[] pixels = new int[w * h];
-                            for (int i = 0; i < w * h; i++) {
-                                pixels[i] = -1000000;
-                            }
-                            bmpt.getPixels(pixels, 0, w, w / 2, 0, 300, h);
-                            bmpt = Bitmap.createBitmap(pixels, 0, w, 300, h, Bitmap.Config.ARGB_8888);
-                            final Matrix matrix = new Matrix();
-                            matrix.setRotate(90);
-                            final Bitmap vB2 = Bitmap.createBitmap(bmpt, 0, 0, bmpt.getWidth(), bmpt.getHeight(), matrix, true);
-                            final File ocrphoto = new File(FolderFileUtils.getSDPath(), File.separator + BuildConfig.OCRPHOTOFOLDER + File.separator + BuildConfig.OCRPHOTOFILE);
-                            if (ocrphoto.exists()) {
-                                ocrphoto.delete();
-                            }
-                            final FileOutputStream filestream = new FileOutputStream(ocrphoto);
-                            vB2.compress(Bitmap.CompressFormat.JPEG, 100, filestream);
-                            filestream.flush();
-                            filestream.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                    public void onTaskCompleted(String s) {
+                        arguments.putString(C.OCR_PATH, s);
+                        final Fragment fragment = new BillingFragment();
+                        fragment.setArguments(arguments);
+                        getFragmentManager().beginTransaction()
+                                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out)
+                                .addToBackStack(TakePhotoFragment.class.getSimpleName())
+                                .replace(R.id.main_content, fragment)
+                                .commit();
                     }
-                }).start();
-                arguments.putString(C.OCR_PATH, FolderFileUtils.getSDPath() + File.separator + BuildConfig.OCRPHOTOFOLDER + File.separator + BuildConfig.OCRPHOTOFILE);
-                final Fragment fragment = new BillingFragment();
-                fragment.setArguments(arguments);
-                getFragmentManager().beginTransaction()
-                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out)
-                        .addToBackStack(TakePhotoFragment.class.getSimpleName())
-                        .replace(R.id.main_content, fragment)
-                        .commit();
+                }).execute(vB2, ocrphoto, null, Bitmap.CompressFormat.JPEG, 100);
+
             }
         }
     }
@@ -257,7 +226,7 @@ public class TakePhotoFragment extends Fragment implements TextureView.SurfaceTe
                     // 設定最佳預覽尺寸
                     parameters.setPreviewSize(size.width, size.height);
                     // 設定照片輸出為90度
-//                    parameters.setRotation(90);
+                    parameters.setRotation(90);
                     parameters.setPictureFormat(ImageFormat.JPEG);
                     parameters.setPictureSize(size.width, size.height);
                     break;
@@ -306,56 +275,6 @@ public class TakePhotoFragment extends Fragment implements TextureView.SurfaceTe
         }
     }
 
-    //https://stackoverflow.com/questions/5280479/how-to-save-gps-coordinates-in-exif-data-on-android
-    //    private String makeLatLongString(double d)
-    private synchronized static final String makeLatLongString(double d) {
-        /**
-         * convert latitude into DMS (degree minute second) format. For instance<br/>
-         * -79.948862 becomes<br/>
-         *  79/1,56/1,55903/1000<br/>
-         * It works for latitude and longitude<br/>
-         * @param latitude could be longitude.
-         * @return
-         */
-        d = Math.abs(d);
-        int degrees = (int) d;
-        double remainder = d - degrees;
-        int minutes = (int) (remainder * 60D);
-        int seconds = (int) (((remainder * 60D) - minutes) * 60D * 1000D);
-        String retVal = degrees + "/1," + minutes + "/1," + seconds + "/1000";
-        return retVal;
-
-///////////////另一個寫的角度轉換寫的仔細的方法
-//         private static StringBuilder sb = new StringBuilder(20);
-//         d = Math.abs(d);
-////        latitude=Math.abs(latitude);
-//        int degree = (int) d;
-//        d *= 60;
-//        d -= (degree * 60.0d);
-//        int minute = (int) d;
-//        d *= 60;
-//        d -= (minute * 60.0d);
-//        int second = (int) (d*1000.0d);
-//
-//        sb.setLength(0);
-//        sb.append(degree);
-//        sb.append("/1,");
-//        sb.append(minute);
-//        sb.append("/1,");
-//        sb.append(second);
-//        sb.append("/1000,");
-//        return sb.toString();
-    }
-
-    private static String makeLatStringRef(double lat) {
-        ////N跟S代表南北半球
-        return lat >= 0D ? "N" : "S";
-    }
-
-    private static String makeLonStringRef(double lon) {
-        ////E跟W代表東西經
-        return lon >= 0.0D ? "E" : "W";
-    }
 
     @Override
     public void onResume() {
