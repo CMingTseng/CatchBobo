@@ -22,13 +22,12 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import c.min.tseng.BuildConfig;
 import c.min.tseng.C;
 import c.min.tseng.R;
+import idv.neo.utils.DateTimeUtils;
 import idv.neo.utils.FolderFileUtils;
 import idv.neo.utils.SaveBitmapToFileTask;
 import idv.neo.widget.Guides;
@@ -36,12 +35,13 @@ import idv.neo.widget.Guides;
 public class TakePhotoFragment extends Fragment implements TextureView.SurfaceTextureListener {
     private final static String TAG = "TakePhotoFragment";
     private Camera mCamera;
+    private Bundle mBundle = null;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         onHiddenChanged(false);
-        final Bundle arguments = getArguments();
+        mBundle = getArguments();
     }
 
     @Override
@@ -105,8 +105,31 @@ public class TakePhotoFragment extends Fragment implements TextureView.SurfaceTe
                                 }
                             }, null, new Camera.PictureCallback() {
                                 @Override
-                                public void onPictureTaken(final byte[] data, final Camera camera) {
-                                    savePhoto(data);
+                                public void onPictureTaken(final byte[] _data, final Camera camera) {
+                                    final Bitmap bmp = BitmapFactory.decodeByteArray(_data, 0, _data.length);
+                                    if (bmp != null) {
+                                        if (!FolderFileUtils.checkSDCardExist()) {
+                                            Toast.makeText(context, context.getString(R.string.check_sd), Toast.LENGTH_LONG).show();
+                                        } else {
+                                            if (!FolderFileUtils.checkExternalFolderFileExist(File.separator + BuildConfig.OCRPHOTOFOLDER)) {
+                                                FolderFileUtils.createFolderFile(File.separator + BuildConfig.OCRPHOTOFOLDER);
+                                            }
+                                            savePhoto(bmp, location);
+                                            Bitmap bmpt = bmp;
+                                            int w = bmpt.getWidth();
+                                            int h = bmpt.getHeight();
+                                            int[] pixels = new int[w * h];
+                                            for (int i = 0; i < w * h; i++) {
+                                                pixels[i] = -1000000;
+                                            }
+                                            bmpt.getPixels(pixels, 0, w, w / 2, 0, 300, h);
+                                            bmpt = Bitmap.createBitmap(pixels, 0, w, 300, h, Bitmap.Config.ARGB_8888);
+                                            final Matrix matrix = new Matrix();
+                                            matrix.setRotate(90);
+                                            final Bitmap vB2 = Bitmap.createBitmap(bmpt, 0, 0, bmpt.getWidth(), bmpt.getHeight(), matrix, true);
+                                            saveOCRPrePhoto(vB2);
+                                        }
+                                    }
                                 }
                             });
                         }
@@ -144,66 +167,42 @@ public class TakePhotoFragment extends Fragment implements TextureView.SurfaceTe
     public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
     }
 
-    private void savePhoto(byte[] _data) {
-        final Context context = getContext();
-        final Bundle arguments = getArguments();
-        final Bitmap bmp = BitmapFactory.decodeByteArray(_data, 0, _data.length);
-        //FIXME  not write EXIF to bitmap JPEG file  !!!  so need re-write
-        final LocationManager locationMgr = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        final Criteria staffreport = new Criteria();
-        staffreport.setAccuracy(Criteria.ACCURACY_FINE);
-        staffreport.setAltitudeRequired(false);
-        staffreport.setBearingRequired(false);
-        staffreport.setCostAllowed(false);
-        staffreport.setPowerRequirement(Criteria.POWER_LOW);
-        final Location location = locationMgr.getLastKnownLocation(locationMgr.getBestProvider(staffreport, true));
-        if (bmp != null) {
-            if (!FolderFileUtils.checkSDCardExist()) {
-                Toast.makeText(context, "SD卡不存在!無法保存相片,請插入SD卡。", Toast.LENGTH_LONG).show();
-            } else {
-                if (!FolderFileUtils.checkExternalFolderFileExist(File.separator + BuildConfig.OCRPHOTOFOLDER)) {
-                    FolderFileUtils.createFolderFile(File.separator + BuildConfig.OCRPHOTOFOLDER);
-                }
-                final File newcarphoto = new File(FolderFileUtils.getSDPath(), File.separator + BuildConfig.OCRPHOTOFOLDER + File.separator + getDateTime() + BuildConfig.TEMPPHOTOFILE);
-                new SaveBitmapToFileTask(new SaveBitmapToFileTask.OnTaskCompleted() {
-                    @Override
-                    public void onTaskCompleted(String s) {
-                        arguments.putString(C.PHOTO_PATH, s);
-                    }
-                }).execute(bmp, newcarphoto, location, Bitmap.CompressFormat.JPEG, 100);
-                final File ocrphoto = new File(FolderFileUtils.getSDPath(), File.separator + BuildConfig.OCRPHOTOFOLDER + File.separator + BuildConfig.OCRPHOTOFILE);
-                Bitmap bmpt = bmp;
-                int w = bmpt.getWidth();
-                int h = bmpt.getHeight();
-                int[] pixels = new int[w * h];
-                for (int i = 0; i < w * h; i++) {
-                    pixels[i] = -1000000;
-                }
-                bmpt.getPixels(pixels, 0, w, w / 2, 0, 300, h);
-                bmpt = Bitmap.createBitmap(pixels, 0, w, 300, h, Bitmap.Config.ARGB_8888);
-                final Matrix matrix = new Matrix();
-                matrix.setRotate(90);
-                final Bitmap vB2 = Bitmap.createBitmap(bmpt, 0, 0, bmpt.getWidth(), bmpt.getHeight(), matrix, true);
-                new SaveBitmapToFileTask(new SaveBitmapToFileTask.OnTaskCompleted() {
-                    @Override
-                    public void onTaskCompleted(String s) {
-                        arguments.putString(C.OCR_PATH, s);
-                        final Fragment fragment = new BillingFragment();
-                        fragment.setArguments(arguments);
-                        getFragmentManager().beginTransaction()
-                                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out)
-                                .addToBackStack(TakePhotoFragment.class.getSimpleName())
-                                .replace(R.id.main_content, fragment)
-                                .commit();
-                    }
-                }).execute(vB2, ocrphoto, null, Bitmap.CompressFormat.JPEG, 100);
-
+    private void savePhoto(final Bitmap bitmap, final Location location) {
+        final File newcarphoto = new File(FolderFileUtils.getSDPath(), File.separator + BuildConfig.OCRPHOTOFOLDER + File.separator + DateTimeUtils.getlongTimeToString(System.currentTimeMillis(), null) + BuildConfig.TEMPPHOTOFILE);
+        new SaveBitmapToFileTask(new SaveBitmapToFileTask.OnTaskCompleted() {
+            @Override
+            public void onTaskCompleted(String s) {
+                transactionPage(true, s);
             }
-        }
+        }).execute(bitmap, newcarphoto, location, Bitmap.CompressFormat.JPEG, 100);
     }
 
-    private String getDateTime() {
-        return (new SimpleDateFormat(C.DATETIMEFORMAT)).format(new Date(System.currentTimeMillis()));
+    private void saveOCRPrePhoto(final Bitmap bitmap) {
+        final File ocrphoto = new File(FolderFileUtils.getSDPath(), File.separator + BuildConfig.OCRPHOTOFOLDER + File.separator + BuildConfig.OCRPHOTOFILE);
+        new SaveBitmapToFileTask(new SaveBitmapToFileTask.OnTaskCompleted() {
+            @Override
+            public void onTaskCompleted(String s) {
+                transactionPage(false, s);
+            }
+        }).execute(bitmap, ocrphoto, null, Bitmap.CompressFormat.JPEG, 100);
+    }
+
+    private void transactionPage(boolean isPhoto, String path) {
+        if (isPhoto) {
+            mBundle.putString(C.PHOTO_PATH, path);
+        }
+        if (!isPhoto) {
+            mBundle.putString(C.OCR_PATH, path);
+        }
+        if (mBundle.get(C.PHOTO_PATH) != null && mBundle.get(C.OCR_PATH) != null) {
+            final Fragment fragment = new BillingFragment();
+            fragment.setArguments(mBundle);
+            getFragmentManager().beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out)
+                    .addToBackStack(TakePhotoFragment.class.getSimpleName())
+                    .replace(R.id.main_content, fragment)
+                    .commit();
+        }
     }
 
     /* 相機初始化的method */
@@ -274,7 +273,6 @@ public class TakePhotoFragment extends Fragment implements TextureView.SurfaceTe
             e.printStackTrace();
         }
     }
-
 
     @Override
     public void onResume() {
