@@ -41,6 +41,7 @@
     <string name="send_text">發送文字訊息</string>
 
     <!-- OCR -->
+    <string name="check_sd">SD卡不存在!無法保存相片,請插入SD卡。</string>
     <string name="OCBT001">拍照</string>
     <string name="OCBT002">手動輸入</string>
 
