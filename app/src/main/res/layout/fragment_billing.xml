@@ -81,10 +81,9 @@
         android:id="@+id/car_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="@id/space_split"
-        app:layout_constraintTop_toBottomOf="@id/road_section_hint" />
+        app:layout_constraintRight_toRightOf="@+id/space_split"
+        app:layout_constraintTop_toBottomOf="@+id/road_section_hint" />
 
     <Spinner
         android:id="@+id/cost_type"
@@ -93,7 +92,7 @@
         app:layout_constraintBaseline_creator="@+id/car_type"
         app:layout_constraintHorizontal_bias="0.566"
         app:layout_constraintLeft_toRightOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/space_split"
+        app:layout_constraintRight_toLeftOf="@+id/space_split"
         app:layout_constraintTop_toBottomOf="@+id/road_section" />
 
     <TextView
@@ -112,10 +111,18 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/black"
-        app:layout_constraintBaseline_toBaselineOf="@id/payment_deadline_hint"
-        app:layout_constraintLeft_toRightOf="@id/payment_deadline_hint"
+        app:layout_constraintBaseline_toBaselineOf="@+id/payment_deadline_hint"
+        app:layout_constraintLeft_toRightOf="@+id/payment_deadline_hint"
         app:layout_constraintRight_toRightOf="parent"
         tool:text="2017年6月25日" />
+
+    <Space
+        android:id="@+id/space_split_image"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/payment_deadline_hint" />
 
     <Button
         android:id="@+id/save"
@@ -145,23 +152,36 @@
         app:layout_constraintLeft_toRightOf="@+id/save"
         app:layout_constraintRight_toRightOf="parent" />
 
-    <ImageView
-        android:id="@+id/vehicle_registration_plate_photo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/payment_deadline"
-        tool:srcCompat="@drawable/common_signin_btn_icon_dark" />
-
-    <ImageView
-        android:id="@+id/car_photo"
+    <!--http://blog.csdn.net/lmj623565791/article/details/46695347-->
+    <!--https://github.com/JulienGenoud/android-percent-support-lib-sample-->
+    <!--[DEPRECATED in support lib v26] you should now use ConstraintLayout widget-->
+    <android.support.percent.PercentRelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/save"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/vehicle_registration_plate_photo"
-        tool:srcCompat="@drawable/booked" />
+        app:layout_constraintTop_toBottomOf="@+id/space_split_image">
+
+        <ImageView
+            android:id="@+id/vehicle_registration_plate_photo"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_alignParentTop="true"
+            android:scaleType="centerCrop"
+            app:layout_heightPercent="30%"
+            app:layout_widthPercent="100%"
+            tool:srcCompat="@drawable/common_signin_btn_icon_dark" />
+
+        <ImageView
+            android:id="@+id/car_photo"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_below="@id/vehicle_registration_plate_photo"
+            android:scaleType="centerCrop"
+            app:layout_heightPercent="70%"
+            app:layout_widthPercent="100%"
+            tool:srcCompat="@drawable/booked" />
+    </android.support.percent.PercentRelativeLayout>
 
 </android.support.constraint.ConstraintLayout>
