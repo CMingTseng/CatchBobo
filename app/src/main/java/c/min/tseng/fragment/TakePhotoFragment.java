@@ -36,17 +36,18 @@ import java.util.Set;
 import c.min.tseng.BuildConfig;
 import c.min.tseng.C;
 import c.min.tseng.R;
-import c.min.tseng.domain.CharaterImage;
 import c.min.tseng.domain.DrawCG;
-import c.min.tseng.domain.LabelingBean;
-import c.min.tseng.domain.PixelImage;
-import c.min.tseng.util.FindMaxBoundaryTask;
-import c.min.tseng.util.ImageProcessingUtils;
-import c.min.tseng.util.PlateWizardGuideLine;
-import c.min.tseng.util.ViewPixelBean;
+import idv.neo.utils.CharaterImage;
 import idv.neo.utils.DateTimeUtils;
+import idv.neo.utils.FindMaxBoundaryTask;
 import idv.neo.utils.FolderFileUtils;
+import idv.neo.utils.ImageProcessingUtils;
+import idv.neo.utils.LabelingBean;
+import idv.neo.utils.PixelImage;
 import idv.neo.utils.SaveBitmapToFileTask;
+import idv.neo.utils.ViewPixelBean;
+import idv.neo.widget.PlateWizardGuideLine;
+
 
 public class TakePhotoFragment extends Fragment implements TextureView.SurfaceTextureListener {
     private final static String TAG = "TakePhotoFragment";
@@ -91,18 +92,18 @@ public class TakePhotoFragment extends Fragment implements TextureView.SurfaceTe
 
         final TextureView textureview = (TextureView) child.findViewById(R.id.textureview);
         textureview.setSurfaceTextureListener(this);
-//        textureview.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View view, MotionEvent event) {
-//                Log.d(TAG, " Show  Touch  Action " + event.getAction());
-//                final int pointCount = event.getPointerCount();
-//                Log.d(TAG, " Show  Touch  pointerCount " + pointCount);
-//                Log.d(TAG, " Show  Touch  X  : " + event.getX());
-//                Log.d(TAG, " Show  Touch  Y : " + event.getY());
-//                doMark(view, event);
-//                return false;
-//            }
-//        });
+        textureview.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                Log.d(TAG, " Show  Touch  Action " + event.getAction());
+                final int pointCount = event.getPointerCount();
+                Log.d(TAG, " Show  Touch  pointerCount " + pointCount);
+                Log.d(TAG, " Show  Touch  X  : " + event.getX());
+                Log.d(TAG, " Show  Touch  Y : " + event.getY());
+                doMark(view, event);
+                return false;
+            }
+        });
         final Button takephoto = (Button) child.findViewById(R.id.takephoto);
         takephoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -455,62 +456,24 @@ public class TakePhotoFragment extends Fragment implements TextureView.SurfaceTe
             //白色為前景，黑色為背景找出車牌
 
             LabelingBean labelingBean = LabelingBean.getTwoPassLabelingBean(segment, segWidth, segHeight, Color.BLACK, Color.WHITE);
-
             Log.d(TAG, " getLabelsCharMap size [" + labelingBean.getLabelsCharMap().size() + "]");
             //取出最大的邊界(因白色為前景的最大區域一般為車牌)
             CharaterImage maxCharImage = getMarkLabelingBeanMax(labelingBean);
             if (maxCharImage != null) {
-//                Pixel top = maxCharImage.getTop();
-//                Pixel bottom = maxCharImage.getBottom();
-//                Pixel left = maxCharImage.getLeft();
-//                Pixel right = maxCharImage.getRight();
-//                //車牌粗定位
-//                detectWidth = right.getX() - left.getX() + 1;
-//                detectHeight = bottom.getY() - top.getY() + 1;
-//                detectSeg = new int[detectWidth][detectHeight];
-//                for (int x = left.getX(); x <= right.getX(); x++) {
-//                    for (int y = top.getY(); y <= bottom.getY(); y++) {
-//                        detectSeg[x - left.getX()][y - top.getY()] = pixelImage.getPixels()[(y + (int) mTop) * pixelImage.getWidth() + (x + (int) mLeft)];
-//                    }
-//                }
                 new FindMaxBoundaryTask(new FindMaxBoundaryTask.OnTaskCompleted() {
                     @Override
                     public void onTaskCompleted(Bitmap bitmap) {
                         Bitmap bmpt = bitmap;
-//                        final File newcarphoto = new File(FolderFileUtils.getSDPath(), File.separator + BuildConfig.OCRPHOTOFOLDER + File.separator + " mark_11_" + DateTimeUtils.getlongTimeToString(System.currentTimeMillis(), null) + "mark2" + BuildConfig.TEMPPHOTOFILE);
-//                        Log.d(TAG, "Save File");
-//                        new SaveBitmapToFileTask(new SaveBitmapToFileTask.OnTaskCompleted() {
-//                            @Override
-//                            public void onTaskCompleted(String s) {
-//                                Log.d(TAG, "Save File OK");
-//                            }
-//                        }).execute(bmpt, newcarphoto, null, Bitmap.CompressFormat.JPEG, 100);
+                        final File newcarphoto = new File(FolderFileUtils.getSDPath(), File.separator + BuildConfig.OCRPHOTOFOLDER + File.separator + " mark_11_" + DateTimeUtils.getlongTimeToString(System.currentTimeMillis(), null) + "mark2" + BuildConfig.TEMPPHOTOFILE);
+                        Log.d(TAG, "Save File");
+                        new SaveBitmapToFileTask(new SaveBitmapToFileTask.OnTaskCompleted() {
+                            @Override
+                            public void onTaskCompleted(String s) {
+                                Log.d(TAG, "Save File OK");
+                            }
+                        }).execute(bmpt, newcarphoto, null, Bitmap.CompressFormat.JPEG, 100);
                     }
                 }).execute(pixelImage, (int) mTop, (int) mLeft, maxCharImage);
-                //FIXME for test
-//                Bitmap bmpt = BitmapUtils.doubleIntegerArrayToBitmap(detectSeg, detectWidth, detectHeight);
-//////                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//////                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-////                int w = bmpt.getWidth();
-////                int h = bmpt.getHeight();
-////                int[] pixels = new int[w * h];
-////                for (int i = 0; i < w * h; i++) {
-////                    pixels[i] = -1000000;
-////                }
-////                final Matrix matrix = new Matrix();
-////                matrix.setRotate(90);
-////                final Bitmap vB2 = Bitmap.createBitmap(bmpt, 0, 0, bmpt.getWidth(), bmpt.getHeight(), matrix, true);
-//                final File newcarphoto = new File(FolderFileUtils.getSDPath(), File.separator + BuildConfig.OCRPHOTOFOLDER + File.separator + " mark_11_" + DateTimeUtils.getlongTimeToString(System.currentTimeMillis(), null) + "mark2" + BuildConfig.TEMPPHOTOFILE);
-//                Log.d(TAG, "Save File");
-//                new SaveBitmapToFileTask(new SaveBitmapToFileTask.OnTaskCompleted() {
-//                    @Override
-//                    public void onTaskCompleted(String s) {
-//                        Log.d(TAG, "Save File OK");
-//                    }
-//                }).execute(bmpt, newcarphoto, null, Bitmap.CompressFormat.JPEG, 100);
-                //
-//                mDrawCG.drawRect(left.getX() + (int) mLeft, top.getY() + (int) mTop, right.getX() + (int) mLeft, bottom.getY() + (int) mTop, Color.GREEN, 1);
-//                 doScreenDrawView(mDrawCG.getmBitmap());
             }
         }
     }

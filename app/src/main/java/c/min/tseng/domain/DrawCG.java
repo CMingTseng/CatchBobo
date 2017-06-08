@@ -8,40 +8,39 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.View;
 
 public class DrawCG extends View {
-    private Paint paint;
-    private Canvas canv;
+    private final static String TAG = "DrawCG";
+    private Paint mPaint;
+    private Canvas mCanv;
     private Bitmap mBitmap;
 
     public DrawCG(Context context) {
         super(context);
         // 畫筆
-        paint = new Paint();
+        mPaint = new Paint();
         // 顏色 
-        paint.setColor(Color.RED);
+        mPaint.setColor(Color.RED);
         // 反鋸齒
-        paint.setAntiAlias(true);
+        mPaint.setAntiAlias(true);
         // 線寬  
-        paint.setStrokeWidth(3);
-
+        mPaint.setStrokeWidth(3);
         // 畫布
-        //canv = new Canvas(mBitmap);  
+        //mCanv = new Canvas(mBitmap);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.drawBitmap(mBitmap, 0, 0, null);
-        // super.onDraw(canvas);  
     }
 
     /**
      * 畫線
      */
     public Bitmap drawLine() {
-
-        canv.drawLine(200, 50, 600, 50, paint);
+        mCanv.drawLine(200, 50, 600, 50, mPaint);
         return mBitmap;
     }
 
@@ -50,10 +49,9 @@ public class DrawCG extends View {
      */
     public Bitmap drawCircle(float x, float y, int color) {
         // 填充
-        paint.setStyle(Style.FILL);
-        paint.setColor(color);
-        canv.drawCircle(x, y, 10.0f, paint);
-
+        mPaint.setStyle(Style.FILL);
+        mPaint.setColor(color);
+        mCanv.drawCircle(x, y, 10.0f, mPaint);
         return mBitmap;
     }
 
@@ -61,21 +59,19 @@ public class DrawCG extends View {
      * 還原畫圓
      */
     public void restoreCircle(float x, float y, int count, int color) {
-        System.out.println(" =======restoreCircle [" + count + "]");
-
-
+        Log.d(TAG, " restoreCircle : [" + count + "]");
     }
 
     /**
      * 畫三角形
      */
     public Bitmap drawTriangle() {
-        Path path = new Path();
+        final Path path = new Path();
         path.moveTo(300, 600);
         path.lineTo(600, 200);
         path.lineTo(900, 600);
         path.lineTo(300, 600);
-        canv.drawPath(path, paint);
+        mCanv.drawPath(path, mPaint);
         return mBitmap;
     }
 
@@ -84,10 +80,10 @@ public class DrawCG extends View {
      */
     public Bitmap drawRect(int left, int top, int right, int bottom, int color, int strokeWidth) {
         // 非填充
-        paint.setStyle(Style.STROKE);
-        paint.setColor(color);
-        paint.setStrokeWidth(strokeWidth);
-        canv.drawRect(new Rect(left, top, right, bottom), paint);
+        mPaint.setStyle(Style.STROKE);
+        mPaint.setColor(color);
+        mPaint.setStrokeWidth(strokeWidth);
+        mCanv.drawRect(new Rect(left, top, right, bottom), mPaint);
         return mBitmap;
     }
 
@@ -95,9 +91,10 @@ public class DrawCG extends View {
         return mBitmap;
     }
 
-    public void setmBitmap(Bitmap mBitmap) {
-        this.mBitmap = mBitmap;
-        canv = new Canvas(mBitmap);
+    public void setmBitmap(Bitmap bitmap) {
+        if (bitmap != null) {
+            this.mBitmap = bitmap;
+            mCanv = new Canvas(bitmap);
+        }
     }
-
-}  
+}
