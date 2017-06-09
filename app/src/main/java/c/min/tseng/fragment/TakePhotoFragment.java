@@ -34,7 +34,6 @@ import c.min.tseng.BuildConfig;
 import c.min.tseng.C;
 import c.min.tseng.R;
 import c.min.tseng.domain.DrawCG;
-import idv.neo.utils.BitmapUtils;
 import idv.neo.utils.CharaterImage;
 import idv.neo.utils.DateTimeUtils;
 import idv.neo.utils.FindMaxBoundaryTask;
@@ -77,6 +76,54 @@ public class TakePhotoFragment extends Fragment implements TextureView.SurfaceTe
         super.onAttach(context);
         onHiddenChanged(false);
         mBundle = getArguments();
+        try {
+            mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
+            final Camera.Parameters parameters = mCamera.getParameters();
+            final List<Camera.Size> previewSizes = parameters.getSupportedPreviewSizes();
+            final List<String> focusModes = parameters.getSupportedFocusModes();
+            final List<String> sceneModes = parameters.getSupportedSceneModes();
+            final List<String> flashModes = parameters.getSupportedFlashModes();
+            for (Camera.Size size : previewSizes) {
+                if (size != null) {
+                    parameters.setPreviewSize(size.width, size.height);
+                    parameters.setRotation(90);
+                    parameters.setPictureFormat(ImageFormat.JPEG);
+                    parameters.setPictureSize(size.width, size.height);
+                    break;
+                }
+            }
+            if (focusModes != null) {
+                for (String focus : focusModes) {
+                    parameters.setFocusMode(focus);
+                    if (focus.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
+                        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+                        break;
+                    }
+                }
+            }
+            if (sceneModes != null) {
+                for (String scene : sceneModes) {
+                    parameters.setFocusMode(scene);
+                    if (scene.contains(Camera.Parameters.SCENE_MODE_AUTO)) {
+                        parameters.setFocusMode(Camera.Parameters.SCENE_MODE_AUTO);
+                        break;
+                    }
+                }
+            }
+
+            if (flashModes != null) {
+                for (String flash : flashModes) {
+                    parameters.setFocusMode(flash);
+                    if (flash.contains(Camera.Parameters.FLASH_MODE_AUTO)) {
+                        parameters.setFocusMode(Camera.Parameters.FLASH_MODE_AUTO);
+                        break;
+                    }
+                }
+            }
+            mCamera.setParameters(parameters);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -499,7 +546,15 @@ public class TakePhotoFragment extends Fragment implements TextureView.SurfaceTe
 
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
-        initCamera(surfaceTexture);
+        try {
+            if (mCamera != null) {
+                mCamera.setDisplayOrientation(90);
+                mCamera.setPreviewTexture(surfaceTexture);
+                mCamera.startPreview();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -559,93 +614,6 @@ public class TakePhotoFragment extends Fragment implements TextureView.SurfaceTe
                     .addToBackStack(TakePhotoFragment.class.getSimpleName())
                     .replace(R.id.main_content, fragment)
                     .commit();
-        }
-    }
-
-    /* 相機初始化的method */
-    private void initCamera(SurfaceTexture surfaceTexture) {
-        try {
-            mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
-            // 取得相機參數
-            final Camera.Parameters parameters = mCamera.getParameters();
-            //https://developer.android.com/reference/android/hardware/Camera.Parameters.html#FOCUS_MODE_CONTINUOUS_VIDEO
-            final List<Camera.Size> previewSizes = parameters.getSupportedPreviewSizes();
-            final List<String> focusModes = parameters.getSupportedFocusModes();
-            final List<String> sceneModes = parameters.getSupportedSceneModes();
-            final List<String> flashModes = parameters.getSupportedFlashModes();
-            for (Camera.Size size : previewSizes) {
-                if (size != null) {
-           /*
-            * 設定相片大小為1024*768
-            *  parameters.setPictureSize(1024, 768);//FIXME　will get setParameters failed not use  need get support size
-			*/
-                    // 設定最佳預覽尺寸
-                    parameters.setPreviewSize(size.width, size.height);
-                    // 設定照片輸出為90度
-                    parameters.setRotation(90);
-                    parameters.setPictureFormat(ImageFormat.JPEG);
-                    parameters.setPictureSize(size.width, size.height);
-                    break;
-                }
-            }
-            if (focusModes != null) {
-                for (String focus : focusModes) {
-                    parameters.setFocusMode(focus);
-                    if (focus.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
-//                     parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
-                        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
-                        break;
-                    }
-                }
-            }
-            if (sceneModes != null) {
-                for (String scene : sceneModes) {
-                    parameters.setFocusMode(scene);
-                    if (scene.contains(Camera.Parameters.SCENE_MODE_AUTO)) {
-                        parameters.setFocusMode(Camera.Parameters.SCENE_MODE_AUTO);
-                        break;
-                    }
-                }
-            }
-
-            if (flashModes != null) {
-                for (String flash : flashModes) {
-                    parameters.setFocusMode(flash);
-                    if (flash.contains(Camera.Parameters.FLASH_MODE_AUTO)) {
-                        parameters.setFocusMode(Camera.Parameters.FLASH_MODE_AUTO);
-                        break;
-                    }
-                }
-            }
-//          設定預覽畫面為90度
-            mCamera.setDisplayOrientation(90);
-            // https://developer.android.com/reference/android/hardware/Camera.Parameters.html#setGpsLatitude%28double%29
-            // 設定相機參數
-            mCamera.setParameters(parameters);
-            // 設定顯示的Surface
-            mCamera.setPreviewTexture(surfaceTexture);
-            //https://stackoverflow.com/questions/17682345/how-to-get-android-camera-preview-data
-            //https://stackoverflow.com/questions/9192982/displaying-yuv-image-in-android
-            mCamera.setPreviewCallback(new Camera.PreviewCallback() {
-                @Override
-                public void onPreviewFrame(byte[] _data, Camera camera) {
-                    Camera.Parameters parameters = camera.getParameters();
-                    int format = parameters.getPreviewFormat();
-                    //YUV formats require more conversion
-                    if (format == ImageFormat.NV21 || format == ImageFormat.YUY2 || format == ImageFormat.NV16) {
-                        int w = parameters.getPreviewSize().width;
-                        int h = parameters.getPreviewSize().height;
-//                        final Bitmap bmp = BitmapFactory.decodeByteArray(byt, 0, byt.length);
-                        Log.d(TAG, " PreviewCallback :  ");
-                        Log.d(TAG, " PreviewCallback  Show 1:  " + BitmapUtils.rawByteArrayUseYuvImagToRGBBitmap(_data, format, w, h).getRowBytes());
-//                        mDrawCG.setmBitmap(bmp);
-                    }
-                }
-            });
-            // 開始顯示
-            mCamera.startPreview();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
