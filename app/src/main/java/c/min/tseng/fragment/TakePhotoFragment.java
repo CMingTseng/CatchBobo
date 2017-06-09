@@ -50,7 +50,7 @@ public class TakePhotoFragment extends Fragment implements TextureView.SurfaceTe
     private final static String TAG = "TakePhotoFragment";
     private Camera mCamera;
     private Bundle mBundle = null;
-
+    private TextureView mTextureView;
     private DrawCG mDrawCG;
     private Map<Integer, ViewPixelBean> mCarPeaks = new HashMap<Integer, ViewPixelBean>();
     private int mTouchCount = 0;
@@ -76,54 +76,6 @@ public class TakePhotoFragment extends Fragment implements TextureView.SurfaceTe
         super.onAttach(context);
         onHiddenChanged(false);
         mBundle = getArguments();
-        try {
-            mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
-            final Camera.Parameters parameters = mCamera.getParameters();
-            final List<Camera.Size> previewSizes = parameters.getSupportedPreviewSizes();
-            final List<String> focusModes = parameters.getSupportedFocusModes();
-            final List<String> sceneModes = parameters.getSupportedSceneModes();
-            final List<String> flashModes = parameters.getSupportedFlashModes();
-            for (Camera.Size size : previewSizes) {
-                if (size != null) {
-                    parameters.setPreviewSize(size.width, size.height);
-                    parameters.setRotation(90);
-                    parameters.setPictureFormat(ImageFormat.JPEG);
-                    parameters.setPictureSize(size.width, size.height);
-                    break;
-                }
-            }
-            if (focusModes != null) {
-                for (String focus : focusModes) {
-                    parameters.setFocusMode(focus);
-                    if (focus.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
-                        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
-                        break;
-                    }
-                }
-            }
-            if (sceneModes != null) {
-                for (String scene : sceneModes) {
-                    parameters.setFocusMode(scene);
-                    if (scene.contains(Camera.Parameters.SCENE_MODE_AUTO)) {
-                        parameters.setFocusMode(Camera.Parameters.SCENE_MODE_AUTO);
-                        break;
-                    }
-                }
-            }
-
-            if (flashModes != null) {
-                for (String flash : flashModes) {
-                    parameters.setFocusMode(flash);
-                    if (flash.contains(Camera.Parameters.FLASH_MODE_AUTO)) {
-                        parameters.setFocusMode(Camera.Parameters.FLASH_MODE_AUTO);
-                        break;
-                    }
-                }
-            }
-            mCamera.setParameters(parameters);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -134,10 +86,9 @@ public class TakePhotoFragment extends Fragment implements TextureView.SurfaceTe
         guidesuides.setTag(R.id.tag_mark_area);
         mDrawCG = new DrawCG(context);
         ((RelativeLayout) child.findViewById(R.id.camerarl02)).addView(guidesuides);
+        mTextureView = (TextureView) child.findViewById(R.id.textureview);
 
-        final TextureView textureview = (TextureView) child.findViewById(R.id.textureview);
-        textureview.setSurfaceTextureListener(this);
-//        textureview.setOnTouchListener(new View.OnTouchListener() {
+//        mTextureView.setOnTouchListener(new View.OnTouchListener() {
 //            @Override
 //            public boolean onTouch(View view, MotionEvent event) {
 //                Log.d(TAG, " Show  Touch  Action " + event.getAction());
@@ -620,5 +571,55 @@ public class TakePhotoFragment extends Fragment implements TextureView.SurfaceTe
     @Override
     public void onResume() {
         super.onResume();
+        try {
+            mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
+            final Camera.Parameters parameters = mCamera.getParameters();
+            final List<Camera.Size> previewSizes = parameters.getSupportedPreviewSizes();
+            final List<String> focusModes = parameters.getSupportedFocusModes();
+            final List<String> sceneModes = parameters.getSupportedSceneModes();
+            final List<String> flashModes = parameters.getSupportedFlashModes();
+            for (Camera.Size size : previewSizes) {
+                if (size != null) {
+                    parameters.setPreviewSize(size.width, size.height);
+                    parameters.setRotation(90);
+                    parameters.setPictureFormat(ImageFormat.JPEG);
+                    parameters.setPictureSize(size.width, size.height);
+                    break;
+                }
+            }
+            if (focusModes != null) {
+                for (String focus : focusModes) {
+                    parameters.setFocusMode(focus);
+                    if (focus.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
+                        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+                        break;
+                    }
+                }
+            }
+            if (sceneModes != null) {
+                for (String scene : sceneModes) {
+                    parameters.setFocusMode(scene);
+                    if (scene.contains(Camera.Parameters.SCENE_MODE_AUTO)) {
+                        parameters.setFocusMode(Camera.Parameters.SCENE_MODE_AUTO);
+                        break;
+                    }
+                }
+            }
+
+            if (flashModes != null) {
+                for (String flash : flashModes) {
+                    parameters.setFocusMode(flash);
+                    if (flash.contains(Camera.Parameters.FLASH_MODE_AUTO)) {
+                        parameters.setFocusMode(Camera.Parameters.FLASH_MODE_AUTO);
+                        break;
+                    }
+                }
+            }
+            mCamera.setParameters(parameters);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        mTextureView.setSurfaceTextureListener(this);
     }
 }
+
