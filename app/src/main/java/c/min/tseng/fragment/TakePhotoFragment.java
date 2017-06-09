@@ -3,9 +3,13 @@ package c.min.tseng.fragment;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.graphics.YuvImage;
@@ -92,18 +96,18 @@ public class TakePhotoFragment extends Fragment implements TextureView.SurfaceTe
 
         final TextureView textureview = (TextureView) child.findViewById(R.id.textureview);
         textureview.setSurfaceTextureListener(this);
-        textureview.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                Log.d(TAG, " Show  Touch  Action " + event.getAction());
-                final int pointCount = event.getPointerCount();
-                Log.d(TAG, " Show  Touch  pointerCount " + pointCount);
-                Log.d(TAG, " Show  Touch  X  : " + event.getX());
-                Log.d(TAG, " Show  Touch  Y : " + event.getY());
-                doMark(view, event);
-                return false;
-            }
-        });
+//        textureview.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent event) {
+//                Log.d(TAG, " Show  Touch  Action " + event.getAction());
+//                final int pointCount = event.getPointerCount();
+//                Log.d(TAG, " Show  Touch  pointerCount " + pointCount);
+//                Log.d(TAG, " Show  Touch  X  : " + event.getX());
+//                Log.d(TAG, " Show  Touch  Y : " + event.getY());
+//                doMark(view, event);
+//                return false;
+//            }
+//        });
         final Button takephoto = (Button) child.findViewById(R.id.takephoto);
         takephoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -198,6 +202,67 @@ public class TakePhotoFragment extends Fragment implements TextureView.SurfaceTe
             }
         });
         return child;
+    }
+
+    //    private Bitmap transformColorProcess(Bitmap src) {
+//        int bmWidth = src.getWidth();
+//        int bmHeight = src.getHeight();
+//        int[] newBitmap = new int[bmWidth * bmHeight];
+//        src.getPixels(newBitmap, 0, bmWidth, 0, 0, bmWidth, bmHeight);
+//        for (int h = 0; h < bmHeight; h++) {
+//            for (int w = 0; w < bmWidth; w++) {
+//                int index = h * bmWidth + w;
+//                int alpha = newBitmap[index] & 0xff000000;
+//                int r = (newBitmap[index] >> 16) & 0xff;
+//                int g = (newBitmap[index] >> 8) & 0xff;
+//                int b = newBitmap[index] & 0xff;
+//                int t = r; //Swap the color
+//                r = g;
+//                g = b;
+//                b = t;
+//                newBitmap[index] = alpha | (r << 16) | (g << 8) | b;
+//            }
+//        }
+//        Bitmap bm = Bitmap.createBitmap(bmWidth, bmHeight, Bitmap.Config.ARGB_8888);
+//        bm.setPixels(newBitmap, 0, bmWidth, 0, 0, bmWidth, bmHeight);
+//        return bm;
+//    }
+
+    private Bitmap transformGrayProcess(Bitmap src) {
+        int srcWidth = src.getWidth();
+        int srcHeight = src.getHeight();
+        int[] newBitmap = new int[srcWidth * srcHeight];
+        src.getPixels(newBitmap, 0, srcWidth, 0, 0, srcWidth, srcHeight);
+        int alpha = 0xFF << 24;
+        for (int h = 0; h < srcHeight; h++) {
+            for (int w = 0; w < srcWidth; w++) {
+                int operate_index = newBitmap[srcWidth * h + w];
+                int red = ((operate_index & 0x00FF0000) >> 16);
+                int green = ((operate_index & 0x0000FF00) >> 8);
+                int blue = (operate_index & 0x000000FF);
+                operate_index = (int) ((float) red * 0.3 + (float) green * 0.59 + (float) blue * 0.11);
+                operate_index = alpha | (operate_index << 16) | (operate_index << 8) | operate_index;
+                newBitmap[srcWidth * h + w] = operate_index;
+
+            }
+        }
+        final Bitmap result = Bitmap.createBitmap(srcWidth, srcHeight, Bitmap.Config.ARGB_8888);
+        result.setPixels(newBitmap, 0, srcWidth, 0, 0, srcWidth, srcHeight);
+        return result;
+    }
+
+    private Bitmap transformGrayWithColorMatrixProcess(Bitmap src) {
+        int bmWidth = src.getWidth();
+        int bmHeight = src.getHeight();
+        Bitmap bmpGrayscale = Bitmap.createBitmap(bmWidth, bmHeight, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(bmpGrayscale);
+        Paint paint = new Paint();
+        ColorMatrix cm = new ColorMatrix();
+        cm.setSaturation(0);
+        ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
+        paint.setColorFilter(f);
+        c.drawBitmap(src, 0, 0, paint);
+        return bmpGrayscale;
     }
 
     public void doMark(View view, MotionEvent e) {
