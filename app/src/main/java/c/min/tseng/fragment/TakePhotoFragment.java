@@ -3,16 +3,10 @@ package c.min.tseng.fragment;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
-import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.location.Criteria;
 import android.location.Location;
@@ -30,7 +24,6 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
@@ -41,6 +34,7 @@ import c.min.tseng.BuildConfig;
 import c.min.tseng.C;
 import c.min.tseng.R;
 import c.min.tseng.domain.DrawCG;
+import idv.neo.utils.BitmapUtils;
 import idv.neo.utils.CharaterImage;
 import idv.neo.utils.DateTimeUtils;
 import idv.neo.utils.FindMaxBoundaryTask;
@@ -202,67 +196,6 @@ public class TakePhotoFragment extends Fragment implements TextureView.SurfaceTe
             }
         });
         return child;
-    }
-
-    //    private Bitmap transformColorProcess(Bitmap src) {
-//        int bmWidth = src.getWidth();
-//        int bmHeight = src.getHeight();
-//        int[] newBitmap = new int[bmWidth * bmHeight];
-//        src.getPixels(newBitmap, 0, bmWidth, 0, 0, bmWidth, bmHeight);
-//        for (int h = 0; h < bmHeight; h++) {
-//            for (int w = 0; w < bmWidth; w++) {
-//                int index = h * bmWidth + w;
-//                int alpha = newBitmap[index] & 0xff000000;
-//                int r = (newBitmap[index] >> 16) & 0xff;
-//                int g = (newBitmap[index] >> 8) & 0xff;
-//                int b = newBitmap[index] & 0xff;
-//                int t = r; //Swap the color
-//                r = g;
-//                g = b;
-//                b = t;
-//                newBitmap[index] = alpha | (r << 16) | (g << 8) | b;
-//            }
-//        }
-//        Bitmap bm = Bitmap.createBitmap(bmWidth, bmHeight, Bitmap.Config.ARGB_8888);
-//        bm.setPixels(newBitmap, 0, bmWidth, 0, 0, bmWidth, bmHeight);
-//        return bm;
-//    }
-
-    private Bitmap transformGrayProcess(Bitmap src) {
-        int srcWidth = src.getWidth();
-        int srcHeight = src.getHeight();
-        int[] newBitmap = new int[srcWidth * srcHeight];
-        src.getPixels(newBitmap, 0, srcWidth, 0, 0, srcWidth, srcHeight);
-        int alpha = 0xFF << 24;
-        for (int h = 0; h < srcHeight; h++) {
-            for (int w = 0; w < srcWidth; w++) {
-                int operate_index = newBitmap[srcWidth * h + w];
-                int red = ((operate_index & 0x00FF0000) >> 16);
-                int green = ((operate_index & 0x0000FF00) >> 8);
-                int blue = (operate_index & 0x000000FF);
-                operate_index = (int) ((float) red * 0.3 + (float) green * 0.59 + (float) blue * 0.11);
-                operate_index = alpha | (operate_index << 16) | (operate_index << 8) | operate_index;
-                newBitmap[srcWidth * h + w] = operate_index;
-
-            }
-        }
-        final Bitmap result = Bitmap.createBitmap(srcWidth, srcHeight, Bitmap.Config.ARGB_8888);
-        result.setPixels(newBitmap, 0, srcWidth, 0, 0, srcWidth, srcHeight);
-        return result;
-    }
-
-    private Bitmap transformGrayWithColorMatrixProcess(Bitmap src) {
-        int bmWidth = src.getWidth();
-        int bmHeight = src.getHeight();
-        Bitmap bmpGrayscale = Bitmap.createBitmap(bmWidth, bmHeight, Bitmap.Config.ARGB_8888);
-        Canvas c = new Canvas(bmpGrayscale);
-        Paint paint = new Paint();
-        ColorMatrix cm = new ColorMatrix();
-        cm.setSaturation(0);
-        ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
-        paint.setColorFilter(f);
-        c.drawBitmap(src, 0, 0, paint);
-        return bmpGrayscale;
     }
 
     public void doMark(View view, MotionEvent e) {
@@ -692,68 +625,28 @@ public class TakePhotoFragment extends Fragment implements TextureView.SurfaceTe
             // 設定顯示的Surface
             mCamera.setPreviewTexture(surfaceTexture);
             //https://stackoverflow.com/questions/17682345/how-to-get-android-camera-preview-data
-//            mCamera.setPreviewCallback(new Camera.PreviewCallback() {
-//                @Override
-//                public void onPreviewFrame(byte[] _data, Camera camera) {
-//
-//                    Camera.Parameters parameters = camera.getParameters();
-//                    int format = parameters.getPreviewFormat();
-//                    //YUV formats require more conversion
-//                    if (format == ImageFormat.NV21 || format == ImageFormat.YUY2 || format == ImageFormat.NV16) {
-//                        int w = parameters.getPreviewSize().width;
-//                        int h = parameters.getPreviewSize().height;
-//
-////                        final Bitmap bmp = BitmapFactory.decodeByteArray(byt, 0, byt.length);
-//                        Log.d(TAG, " PreviewCallback :  ");
-//                        Log.d(TAG, " PreviewCallback  Show 1:  " + rawByteArrayUseYuvImagToRGBBitmap(_data,format,w,h).getRowBytes());
-////                        mDrawCG.setmBitmap(bmp);
-//                    }
-//
-//                }
-//            });
+            //https://stackoverflow.com/questions/9192982/displaying-yuv-image-in-android
+            mCamera.setPreviewCallback(new Camera.PreviewCallback() {
+                @Override
+                public void onPreviewFrame(byte[] _data, Camera camera) {
+                    Camera.Parameters parameters = camera.getParameters();
+                    int format = parameters.getPreviewFormat();
+                    //YUV formats require more conversion
+                    if (format == ImageFormat.NV21 || format == ImageFormat.YUY2 || format == ImageFormat.NV16) {
+                        int w = parameters.getPreviewSize().width;
+                        int h = parameters.getPreviewSize().height;
+//                        final Bitmap bmp = BitmapFactory.decodeByteArray(byt, 0, byt.length);
+                        Log.d(TAG, " PreviewCallback :  ");
+                        Log.d(TAG, " PreviewCallback  Show 1:  " + BitmapUtils.rawByteArrayUseYuvImagToRGBBitmap(_data, format, w, h).getRowBytes());
+//                        mDrawCG.setmBitmap(bmp);
+                    }
+                }
+            });
             // 開始顯示
             mCamera.startPreview();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    //http://blog.csdn.net/yanzi1225627/article/details/8626411
-    //https://stackoverflow.com/questions/9192982/displaying-yuv-image-in-android
-    private Bitmap rawByteArrayUseYuvImagToRGBBitmap(byte[] _data, int format, int width, int height) {
-        Log.d(TAG, " PreviewCallback : 1 ");
-        final YuvImage yuv_image = new YuvImage(_data, format, width, height, null);
-        // Convert YuV to Jpeg
-        final Rect rect = new Rect(0, 0, width, height);
-        final ByteArrayOutputStream os = new ByteArrayOutputStream(_data.length);
-        yuv_image.compressToJpeg(rect, 100, os);
-        final byte[] byt = os.toByteArray();
-        return BitmapFactory.decodeByteArray(byt, 0, byt.length);
-    }
-
-    //http://blog.csdn.net/fireworkburn/article/details/11615531
-    private Bitmap rawByteArrayToRGBABitmap(byte[] data, int width, int height) {
-        Log.d(TAG, " PreviewCallback :  2");
-        int frameSize = width * height;
-        int[] rgba = new int[frameSize];
-        for (int i = 0; i < height; i++)
-            for (int j = 0; j < width; j++) {
-                int y = (0xff & ((int) data[i * width + j]));
-                int u = (0xff & ((int) data[frameSize + (i >> 1) * width + (j & ~1) + 0]));
-                int v = (0xff & ((int) data[frameSize + (i >> 1) * width + (j & ~1) + 1]));
-                y = y < 16 ? 16 : y;
-                int r = Math.round(1.164f * (y - 16) + 1.596f * (v - 128));
-                int g = Math.round(1.164f * (y - 16) - 0.813f * (v - 128) - 0.391f * (u - 128));
-                int b = Math.round(1.164f * (y - 16) + 2.018f * (u - 128));
-                r = r < 0 ? 0 : (r > 255 ? 255 : r);
-                g = g < 0 ? 0 : (g > 255 ? 255 : g);
-                b = b < 0 ? 0 : (b > 255 ? 255 : b);
-                rgba[i * width + j] = 0xff000000 + (b << 16) + (g << 8) + r;
-            }
-        final Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        bmp.setPixels(rgba, 0, width, 0, 0, width, height);
-        return bmp;
     }
 
     @Override
