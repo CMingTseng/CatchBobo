@@ -1,6 +1,7 @@
 package c.min.tseng.fragment;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.Marker;
 
@@ -24,7 +25,7 @@ import c.min.tseng.adapter.EmployeeAdapter;
  * Created by Neo on 2017/6/12.
  */
 
-public class TrafficWardenMapFragment extends Fragment implements LocationListener {
+public class TrafficWardenMapFragment extends Fragment implements LocationListener, OnMapReadyCallback {
     private static final String TAG = TrafficWardenMapFragment.class.getSimpleName();
     private Spinner mEmployees;
 
@@ -659,10 +660,19 @@ public class TrafficWardenMapFragment extends Fragment implements LocationListen
         final Bundle arguments = getArguments();
         final View child = inflater.inflate(R.layout.fragment_trafficwardenmap, container, false);
         mEmployees = (Spinner) child.findViewById(R.id.SP001User);
+//        MapFragment mapFragment =(MapFragment) getChildFragmentManager().findFragmentById(R.id.map);
 //        GoogleMap map  = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();//support v13
-        GoogleMap map = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map)).getMap();
-        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+//        GoogleMap map = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map)).getMap();
+        mapFragment.getMapAsync(this);
+        return child;
+    }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        final Context context = getContext();
+        GoogleMap map = googleMap;
+        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker arg0) {
                 String[] funcString = context.getResources().getStringArray(R.array.func);
@@ -732,7 +742,6 @@ public class TrafficWardenMapFragment extends Fragment implements LocationListen
                 alertDialog.show();
             }
         });
-        return child;
     }
 
     @Override

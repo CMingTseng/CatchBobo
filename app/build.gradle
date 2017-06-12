@@ -132,6 +132,6 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:+'
     compile 'utils.neo.idv:utils:+'
     compile 'org.igniterealtime.smack:smack:3.2.1'
-    compile 'com.google.android.gms:play-services:4.0.30'
+    compile 'com.google.android.gms:play-services-maps:11.0.0'
 }
 //apply plugin: 'com.google.gms.google-services'
