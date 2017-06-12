@@ -1,65 +1,40 @@
 package c.min.tseng.fragment;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
-import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Typeface;
-import android.location.Address;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
-import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.telephony.TelephonyManager;
-import android.util.Log;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.view.ViewGroup;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import c.min.tseng.R;
-import c.min.tseng.xmpp.login;
+import c.min.tseng.adapter.EmployeeAdapter;
 
+/**
+ * Created by Neo on 2017/6/12.
+ */
 
-public class Map extends Activity implements LocationListener {
+public class TrafficWardenMapFragment extends Fragment implements LocationListener {
+    private static final String TAG = TrafficWardenMapFragment.class.getSimpleName();
+    private Spinner mEmployees;
 
-    ////////多執行緒-Handler和Thread  ///////////////////////
-    //透過公會找到U成員的經紀人，這樣才能派遣工作  (找到顯示畫面的UI Thread上的Handler)    
+    /*
+    *  ////////多執行緒-Handler和Thread  ///////////////////////
+    //透過公會找到U成員的經紀人，這樣才能派遣工作  (找到顯示畫面的UI Thread上的Handler)
     private Handler mUI_Handler = new Handler();
     private Handler mThreadHandler; ///宣告臨時工的經紀人
     private HandlerThread mThread; ///宣告臨時工
-    ///////////////////////////////////////////////////////////////////////////////////////     
+    ///////////////////////////////////////////////////////////////////////////////////////
 
 
     //SQL資料處理變數
@@ -126,12 +101,11 @@ public class Map extends Activity implements LocationListener {
     public static final String CLASS_NAME = "jp.naver.line.android.activity.selectchat.SelectChatActivity";
     private List<ApplicationInfo> m_appList;
 
-
-    @Override
+      @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.map);
+        setContentView(R.layout.fragment_trafficwardenmap);
 
 //        //取得跨class資料
 //        updataurl = FunctionFragment.Loccalreport;
@@ -210,17 +184,17 @@ public class Map extends Activity implements LocationListener {
 //                VGPS = new LatLng(dLat, dLon);
 //                //設定Marker
 ////                  if(Userid.equals(getString(R.string.uid1)) )//把自己設不同顏色
-////                      vgps[position] = map.addMarker(new MarkerOptions().position(VGPS)
+////                      vgps[position] = fragment_trafficwardenmap.addMarker(new MarkerOptions().position(VGPS)
 ////                                .title(Usertitle).snippet(dLat+"#"+dLon+"#"+sLocation[4]+"#"+sLocation[5]).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
 //
 //                if (Userid.equals(strMyUid))//把自己設不同顏色
-//                    vgps[position] = map.addMarker(new MarkerOptions().position(VGPS)
+//                    vgps[position] = fragment_trafficwardenmap.addMarker(new MarkerOptions().position(VGPS)
 //                            .title(Usertitle).snippet(dLat + "#" + dLon + "#" + sLocation[4] + "#" + sLocation[5] + "#" + sLocation[6]).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
 //                else
-//                    vgps[position] = map.addMarker(new MarkerOptions().position(VGPS)
+//                    vgps[position] = fragment_trafficwardenmap.addMarker(new MarkerOptions().position(VGPS)
 //                            .title(Usertitle).snippet(dLat + "#" + dLon + "#" + sLocation[4] + "#" + sLocation[5] + "#" + sLocation[6]));
 //
-//                map.moveCamera(CameraUpdateFactory.newLatLngZoom(VGPS, 12));
+//                fragment_trafficwardenmap.moveCamera(CameraUpdateFactory.newLatLngZoom(VGPS, 12));
 //            }
 //
 //            @Override
@@ -236,11 +210,11 @@ public class Map extends Activity implements LocationListener {
 //        //一開始先把資料庫的資料顯示出來
 //        showList();
 //        Sqliteupdate();
-//       onDestroy();        
+//       onDestroy();
     }
 
 
-//測試功能.透過Line發送訊息    
+//測試功能.透過Line發送訊息
 //    public void galleryHandler(View view) {
 //        if(checkLineInstalled()){
 //            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -293,7 +267,7 @@ public class Map extends Activity implements LocationListener {
         //建立一個query資料的thread
 //        Thread   t_queryData=new Thread(queryData);
 //        //開始query資料的thread
-//         t_queryData.start();  
+//         t_queryData.start();
 //        // 等待 query thread 完成才繼續作UI更新
 //         try {
 //             t_queryData.join();
@@ -356,10 +330,10 @@ public class Map extends Activity implements LocationListener {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-//          //若抓取資料成功               
+//          //若抓取資料成功
         if (SQLiteSuc) {
             //1.把SQLite的資料清除掉
-//              Toast.makeText(getApplicationContext(), "正在更新資料2刪除資料表", Toast.LENGTH_LONG).show();  
+//              Toast.makeText(getApplicationContext(), "正在更新資料2刪除資料表", Toast.LENGTH_LONG).show();
             gpsHelp.delete(DB_TABLE31, null, null);
             //2.把網頁抓到的資料分割後放入SQLite
             mPerson = pageData.split(strToken1); // parser 每一筆資料
@@ -379,7 +353,7 @@ public class Map extends Activity implements LocationListener {
 //                  newRow.put("pic",userInfo[6]);
                 newRow.put("Lasttime", userInfo[5]);
                 gpsHelp.insert(DB_TABLE31, null, newRow);//寫到SQLite
-//                  Toast.makeText(getApplicationContext(), "正在更新資料3寫入資料表", Toast.LENGTH_LONG).show();  
+//                  Toast.makeText(getApplicationContext(), "正在更新資料3寫入資料表", Toast.LENGTH_LONG).show();
             }
 //           showList();
             setMapLocation();
@@ -392,7 +366,7 @@ public class Map extends Activity implements LocationListener {
 
     public void setMapLocation() {
         //設定地圖
-        map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+        map = ((MapFragment) getFragmentManager().findFragmentById(map)).getMap();
         map.clear(); //清除標誌
         //  vgps[]設定要幾個座標; mArea:MySQL/SQLite抓到的字串陣列
         vgps = new Marker[mArea.length];
@@ -400,9 +374,9 @@ public class Map extends Activity implements LocationListener {
         for (int i = 0; i < mArea.length; i++) {
             String[] sLocation = mArea[i].split(strToken2);
             //從MySQL來的資料分類
-//              String Userid = sLocation[0]; // userid 
+//              String Userid = sLocation[0]; // userid
 //              Log.d("info1",sLocation[0]);//set temp userid
-//              String Usertitle = sLocation[1]; // user name 
+//              String Usertitle = sLocation[1]; // user name
 //              double dLat = Double.parseDouble(sLocation[2]); // 南北緯
 //              double dLon = Double.parseDouble(sLocation[3]); // 東西經
             //從SQLite來的資料分類
@@ -422,7 +396,7 @@ public class Map extends Activity implements LocationListener {
 //              Log.d("info5",sLocation[5]);//set temp passwd
             VGPS = new LatLng(dLat, dLon);
 //              if(Userid.equals(getString(R.string.uid1)) )//把自己設不同顏色
-//                  vgps[i] = map.addMarker(new MarkerOptions().position(VGPS)
+//                  vgps[i] = fragment_trafficwardenmap.addMarker(new MarkerOptions().position(VGPS)
 //                          .title(Usertitle).snippet(dLat+"#"+dLon+"#"+sLocation[4]+"#"+sLocation[5]).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
             if (Userid.equals(strMyUid))//把自己設不同顏色
                 vgps[i] = map.addMarker(new MarkerOptions().position(VGPS)
@@ -447,318 +421,343 @@ public class Map extends Activity implements LocationListener {
         // TODO Auto-generated method stub
 
 //				//取得自己的緯度經度
-        tdLat = location.getLatitude();
-        tdLon = location.getLongitude();
-//        	
-//            Toast.makeText(getApplicationContext(), getString(R.string.Alert), Toast.LENGTH_SHORT).show();
-//            String str=getString(R.string.Nowloca)+"\n"; //設定Toast用變數
-//            str = str + getString(R.string.lat)+ + location.getLatitude() +"\n"+getString(R.string.lon) +location.getLongitude();//將經緯度設定給變數
-//            Toast.makeText(getApplicationContext(), str, Toast.LENGTH_LONG).show();
+//        tdLat = location.getLatitude();
+//        tdLon = location.getLongitude();
+////
+////            Toast.makeText(getApplicationContext(), getString(R.string.Alert), Toast.LENGTH_SHORT).show();
+////            String str=getString(R.string.Nowloca)+"\n"; //設定Toast用變數
+////            str = str + getString(R.string.lat)+ + location.getLatitude() +"\n"+getString(R.string.lon) +location.getLongitude();//將經緯度設定給變數
+////            Toast.makeText(getApplicationContext(), str, Toast.LENGTH_LONG).show();
+//
+//
+//        //變動時會丟位置資料進來a001=B001&d002=26.1111&d003=120.3333
+//        newUpdate = strMyUid + "&d002=" + location.getLatitude() + "&d003=" + location.getLongitude() + "&d004=" + getDateTime();//設定update字串
+////            newUpdate=strMyUid+"&ad1="+location.getLatitude()+"&ad2="+location.getLongitude()
+////                    +"&tel="+strMyTel+"&email="+strMyEmail;//設定update字串
+//        //更新GPS資訊到SQL內.費時.造成ANR故使用thread執行
+//        Thread t_updateBosslocData = new Thread(updateBosslocData);
+//        t_updateBosslocData.start();   // 指派臨時工開始工作
+//        try {
+//            t_updateBosslocData.join();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+////             Toast.makeText(getApplicationContext(), "正在更新老闆個人GPS位置", Toast.LENGTH_LONG).show();
+//
+////            抓資料回來更新 &更新地圖
+//
+//        Sqliteupdate();
+//        showList();
+//    }
+//
+//    @Override
+////      public void onProviderDisabled(String arg0)
+//    public void onProviderDisabled(String provider) {
+//        // TODO Auto-generated method stub
+////            Toast.makeText(getApplicationContext(),"您的GPS已關閉", Toast.LENGTH_LONG).show();
+//        mLocationMgr.removeUpdates(this);
+//    }
+//
+//    @Override
+////      public void onProviderEnabled(String arg0)
+//    public void onProviderEnabled(String provider) {
+//        // TODO Auto-generated method stub
+////            Toast.makeText(getApplicationContext(), "您的GPS已開啟", Toast.LENGTH_LONG).show();
+//        mLocationMgr.requestLocationUpdates(mBestLocationProv, 120000, 60, this);//60秒或1公尺
+//    }
+//
+//    @Override
+////      public void onStatusChanged(String arg0, int arg1, Bundle arg2)
+//    public void onStatusChanged(String provider, int status, Bundle extras) {
+//        // TODO Auto-generated method stub
+//        Criteria c = new Criteria();
+//        mBestLocationProv = mLocationMgr.getBestProvider(c, true);
+//    }
+//
+//    @Override
+//    protected void onStop() {
+//        // TODO Auto-generated method stub
+//        mLocationMgr.removeUpdates(this);
+//        super.onStop();
+//    }
+//
+//    @Override
+//    protected void onResume() {
+//        // TODO Auto-generated method stub
+//        super.onResume();
+//        mLocationMgr.requestLocationUpdates(mBestLocationProv, 120000, 60, this);//60秒或1公尺
+//    }
+//
+//    //  自訂點下Marker的 Adapter
+//    private void setmymapAdapter() {
+//        // TODO Auto-generated method stub
+//        map.setInfoWindowAdapter(new InfoWindowAdapter() {
+//
+//            @Override
+//            public View getInfoWindow(Marker arg0) {
+//                return null;
+//            }
+//
+//            @Override
+//            public View getInfoContents(Marker marker) {
+//                View v = getLayoutInflater().inflate(R.layout.marker, null);
+//                TextView infolat = (TextView) v.findViewById(R.id.infolat);
+//                TextView infolng = (TextView) v.findViewById(R.id.infolng);
+//                TextView infotitle = (TextView) v.findViewById(R.id.infotitle);
+//                TextView infotel = (TextView) v.findViewById(R.id.infotel);
+//                TextView infotime = (TextView) v.findViewById(R.id.infotime);
+//
+//
+//                personal = marker.getSnippet().split("#");
+//                infotitle.setText(marker.getTitle());
+//                infotitle.setTypeface(Typeface.DEFAULT_BOLD);
+//                infolat.setHint(getString(R.string.lat) + personal[0]);
+//
+//                infolng.setHint(getString(R.string.lon) + personal[1]);
+//
+//                infotel.setHint(getString(R.string.mapsni2) + personal[2]);
+//                infotime.setHint(getString(R.string.mapsni3) + personal[4]);
+//
+//
+//                return v;
+//            }
+//        });
+//    }
+//
 
-
-        //變動時會丟位置資料進來a001=B001&d002=26.1111&d003=120.3333
-        newUpdate = strMyUid + "&d002=" + location.getLatitude() + "&d003=" + location.getLongitude() + "&d004=" + getDateTime();//設定update字串
-//            newUpdate=strMyUid+"&ad1="+location.getLatitude()+"&ad2="+location.getLongitude()
-//                    +"&tel="+strMyTel+"&email="+strMyEmail;//設定update字串
-        //更新GPS資訊到SQL內.費時.造成ANR故使用thread執行
-        Thread t_updateBosslocData = new Thread(updateBosslocData);
-        t_updateBosslocData.start();   // 指派臨時工開始工作
-        try {
-            t_updateBosslocData.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-//             Toast.makeText(getApplicationContext(), "正在更新老闆個人GPS位置", Toast.LENGTH_LONG).show();   
-
-//            抓資料回來更新 &更新地圖
-
-        Sqliteupdate();
-        showList();
-    }
+//
+////////////////////   thread的工作內容  ////////////////////////
+////query Data From MySQL 的實際動作項目內容
+////        private Runnable queryData=new Runnable () {
+////            public void run() {
+////            // TODO Auto-generated method stub
+////                try{
+////                    SQLPHP=GPSlist;
+////                    HttpClient client = new DefaultHttpClient();
+////                    HttpGet get =  new HttpGet("http://"+SQLPHP+"Carq2.php");
+////                    HttpResponse response = client.execute(get);
+////                    HttpEntity entity = response.getEntity();
+////                    String responseText = EntityUtils.toString(entity,"utf-8");
+////                    pageData = responseText; //把整個網頁資料給變數pageData
+//////                    Log.d("AllPagedate",pageData);
+////                }
+////                catch (Exception ee){
+////                }
+////            }
+////        };
+//
+////query Data From SQLlite 的實際動作項目內容
+//private Runnable querySQLiteData = new Runnable() {
+//public void run() {
+//        // TODO Auto-generated method stub
+//        try {
+//
+//        Cursor GPSHelpc = null;
+//        GPSHelpc = gpsHelp.query(true, DB_TABLE31, new String[]{"userid", "name", "Lan", "Lng", "Tel", "Email", "Lasttime"}, null, null, null, null, null, null);
+//        if (GPSHelpc == null) {
+//        return;
+//        }
+//        if (GPSHelpc.getCount() == 0) {
+//
+//        Toast.makeText(Map.this, getString(R.string.msg_no_data), Toast.LENGTH_SHORT).show();
+//        } else {
+//        int rows_num = GPSHelpc.getCount(); //取得資料表列數
+//        GPSHelpc.moveToFirst();//查詢完SQLlite會位於最後.要重新移到最前取值
+//        String TempSQL;
+//        StringBuffer SQLiteDataB = new StringBuffer();
+//        for (int i = 0; i < rows_num; i++) {
+//        //把SQLite查詢到的資料給變數TempSQL
+//        TempSQL = GPSHelpc.getString(0) + "," + GPSHelpc.getString(1) + "," + GPSHelpc.getString(2) + "," + GPSHelpc.getString(3) + "," + GPSHelpc.getString(4) + "," + GPSHelpc.getString(5) + "," + GPSHelpc.getString(6) + "\n";
+//        //Log.d("WoWTempSQL", TempSQL);
+//        //利用StringBuffer連加String
+//        SQLiteDataB.append(TempSQL);
+//        GPSHelpc.moveToNext();   //將指標移至下一筆資料
+//        }
+//        //將StringBuffer轉給SQLiteData
+//        SQLiteData = SQLiteDataB.toString();
+//
+////                        SQLiteData=GPSHelpc.getString(0)+","+GPSHelpc.getString(1)+","+GPSHelpc.getString(2)+","+GPSHelpc.getString(3)+","+GPSHelpc.getString(4)+","+GPSHelpc.getString(5)+","+GPSHelpc.getString(6)+"\n";
+////                      Log.d("WoWSQLiteDataWoW", SQLiteData);
+////                    while (GPSHelpc.moveToNext())
+////                    {
+////                        SQLiteData=GPSHelpc.getString(0)+","+GPSHelpc.getString(1)+","+GPSHelpc.getString(2)+","+GPSHelpc.getString(3)+","+GPSHelpc.getString(4)+","+GPSHelpc.getString(5)+","+GPSHelpc.getString(6)+"\n";
+////                        Log.d("NNNWoWSQLiteDataWoW", SQLiteData);
+////                    }
+//        }
+//
+//        } catch (Exception ee) {
+//        }
+//        }
+//        };
+////updateBosslocData 的實際動作項目內容
+//private Runnable updateBosslocData = new Runnable() {
+//public void run() {
+//        // TODO Auto-generated method stub
+//        try {
+//        HttpClient client = new DefaultHttpClient();
+////                    SQLPHP=GPSlist;
+////                    HttpGet get =  new HttpGet("http://"+SQLPHP+"Caru2.php?a001="+newUpdate);
+//        HttpGet get = new HttpGet("http://" + updataurl + "Caru2.php?a001=" + newUpdate);
+//        Log.d("WWWWWupdateBosslocDataCCCCC", updataurl + "Caru2.php?a001=" + newUpdate);
+//        client.execute(get);
+//        Sqliteupdate();
+//        } catch (Exception ee) {
+//        }
+//        }
+//        };
+//
+////Sqliteupdatet 的實際動作項目內容
+//private Runnable Sqliteupdatet = new Runnable() {
+//public void run() {
+//        // TODO Auto-generated method stub
+//        SQLiteSuc = false;
+//        try {
+////                    SQLPHP=GPSlist;
+////                    Log.d("AAAAAAAAAAAAAAAASQLPHPCCCCC", SQLPHP);
+//        HttpClient client = new DefaultHttpClient();
+////                    HttpGet get =  new HttpGet("http://"+SQLPHP+"Carq2.php");
+////                  HttpGet get =  new HttpGet("http://"+SQLPHP+"Carq2.php");
+//        HttpGet get = new HttpGet("http://" + updataurl + "Carq2.php");
+//        Log.d("SqliteupdatetCCCCC", updataurl + "Carq2.php");
+//        HttpResponse response = client.execute(get);
+//        HttpEntity entity = response.getEntity();
+//        String responseText = EntityUtils.toString(entity, "utf-8");
+//        pageData = responseText; //把整個網頁資料給變數pageData
+//        client.execute(get);
+//
+//        SQLiteSuc = true;
+//        } catch (Exception ee) {
+//        }
+//        }
+//        };
+//
+///////////////////////////////////////////////////////////////////
+//@Override
+//protected void onDestroy() {
+//        super.onDestroy();
+//        //移除臨時工的工作
+//        if (mThreadHandler != null) {
+//        mThreadHandler.removeCallbacks(querySQLiteData);
+//        mThreadHandler.removeCallbacks(Sqliteupdatet);
+//        mThreadHandler.removeCallbacks(updateBosslocData);
+////                mThreadHandler.removeCallbacks(queryData);
+//        }
+//        //解聘臨時工 (關閉Thread)
+//        if (mThread != null) {
+//        mThread.quit();
+//        }
+//        }
 
     @Override
-//      public void onProviderDisabled(String arg0)
-    public void onProviderDisabled(String provider) {
-        // TODO Auto-generated method stub
-//            Toast.makeText(getApplicationContext(),"您的GPS已關閉", Toast.LENGTH_LONG).show();
-        mLocationMgr.removeUpdates(this);
+    public void onAttach(final Context context) {
+        super.onAttach(context);
     }
-
+*/
     @Override
-//      public void onProviderEnabled(String arg0)
-    public void onProviderEnabled(String provider) {
-        // TODO Auto-generated method stub
-//            Toast.makeText(getApplicationContext(), "您的GPS已開啟", Toast.LENGTH_LONG).show();
-        mLocationMgr.requestLocationUpdates(mBestLocationProv, 120000, 60, this);//60秒或1公尺
-    }
-
-    @Override
-//      public void onStatusChanged(String arg0, int arg1, Bundle arg2)
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-        // TODO Auto-generated method stub
-        Criteria c = new Criteria();
-        mBestLocationProv = mLocationMgr.getBestProvider(c, true);
-    }
-
-    @Override
-    protected void onStop() {
-        // TODO Auto-generated method stub
-        mLocationMgr.removeUpdates(this);
-        super.onStop();
-    }
-
-    @Override
-    protected void onResume() {
-        // TODO Auto-generated method stub
-        super.onResume();
-        mLocationMgr.requestLocationUpdates(mBestLocationProv, 120000, 60, this);//60秒或1公尺
-    }
-
-    //  自訂點下Marker的 Adapter
-    private void setmymapAdapter() {
-        // TODO Auto-generated method stub
-        map.setInfoWindowAdapter(new InfoWindowAdapter() {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        final Context context = container.getContext();
+        final Bundle arguments = getArguments();
+        final View child = inflater.inflate(R.layout.fragment_trafficwardenmap, container, false);
+        mEmployees = (Spinner) child.findViewById(R.id.SP001User);
+//        GoogleMap map  = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();//support v13
+        GoogleMap map = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map)).getMap();
+        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
 
             @Override
-            public View getInfoWindow(Marker arg0) {
-                return null;
-            }
+            public void onInfoWindowClick(Marker arg0) {
+                String[] funcString = context.getResources().getStringArray(R.array.func);
+                final String[] ListStr = {funcString[0], funcString[1], funcString[2], funcString[3], funcString[4], funcString[5]};
 
-            @Override
-            public View getInfoContents(Marker marker) {
-                View v = getLayoutInflater().inflate(R.layout.marker, null);
-                TextView infolat = (TextView) v.findViewById(R.id.infolat);
-                TextView infolng = (TextView) v.findViewById(R.id.infolng);
-                TextView infotitle = (TextView) v.findViewById(R.id.infotitle);
-                TextView infotel = (TextView) v.findViewById(R.id.infotel);
-                TextView infotime = (TextView) v.findViewById(R.id.infotime);
-
-
-                personal = marker.getSnippet().split("#");
-                infotitle.setText(marker.getTitle());
-                infotitle.setTypeface(Typeface.DEFAULT_BOLD);
-                infolat.setHint(getString(R.string.lat) + personal[0]);
-
-                infolng.setHint(getString(R.string.lon) + personal[1]);
-
-                infotel.setHint(getString(R.string.mapsni2) + personal[2]);
-                infotime.setHint(getString(R.string.mapsni3) + personal[4]);
-
-
-                return v;
-            }
-        });
-    }
-
-
-    //處理點下Maker後的進階部分
-    private OnInfoWindowClickListener InfoWindowClickListener = new OnInfoWindowClickListener() {
-
-        @Override
-        public void onInfoWindowClick(Marker arg0) {
-            // TODO Auto-generated method stub
-            /** List選單 對話框 */
-
-                
-               
-               
-         /* 使用Sring item*/
-            String[] funcString = Map.this.getResources().getStringArray(R.array.func);
-            final String[] ListStr = {funcString[0], funcString[1], funcString[2], funcString[3], funcString[4], funcString[5]};
-                
         /*final String[] ListStr = { getString(R.string.func1),  getString(R.string.func2),  getString(R.string.func3), getString(R.string.func4), getString(R.string.func5), getString(R.string.func6) };*/
-            AlertDialog.Builder MyListAlertDialog = new AlertDialog.Builder(Map.this);
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+                alertDialog.setTitle(getText(R.string.function));
+                alertDialog.setItems(ListStr, new DialogInterface.OnClickListener() {
 
-            MyListAlertDialog.setTitle(getText(R.string.function));
-
-
-            MyListAlertDialog.setItems(ListStr, new DialogInterface.OnClickListener() {
-
-                public void onClick(DialogInterface dialog, int which) {
-                    // TODO Auto-generated method stub
-                    switch (which) {
-                        case 0://Call
-                            Uri uri = Uri.parse(getString(R.string.dtotel) + personal[1]);
-                            Intent it = new Intent(Intent.ACTION_CALL, uri);
-                            startActivity(it);
-                            break;
-                        case 1://Email
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0://Call
+//                                Uri uri = Uri.parse(getString(R.string.dtotel) + personal[1]);
+//                                Intent it = new Intent(Intent.ACTION_CALL, uri);
+//                                startActivity(it);
+                                break;
+                            case 1://Email
 //                                Uri uri1=Uri.parse(getString(R.string.dtomail)+personal[3]);
 //                                Intent it2 = new Intent(Intent.ACTION_SENDTO,uri1);
 //                                startActivity(it2);
-                            break;
-                        case 2://SMS
+                                break;
+                            case 2://SMS
 //                              Uri uri2 = Uri.parse(getString(R.string.dtotel)+personal[1]);
-//                              Intent it3 = new Intent(Intent.ACTION_SENDTO,uri2);
-                            Intent it3 = new Intent(Intent.ACTION_VIEW);
-                            it3.putExtra("sms_body", getString(R.string.Nowloca) + personal[0]);
-                            it3.setType("vnd.android-dir/mms-sms");
-                            startActivity(it3);
+////                              Intent it3 = new Intent(Intent.ACTION_SENDTO,uri2);
+//                                Intent it3 = new Intent(Intent.ACTION_VIEW);
+//                                it3.putExtra("sms_body", getString(R.string.Nowloca) + personal[0]);
+//                                it3.setType("vnd.android-dir/mms-sms");
+//                                startActivity(it3);
 //                              SmsManager sms=SmsManager.getDefault();
 //                              PendingIntent mPI=PendingIntent.getBroadcast(MainActivity.this ,0,new Intent(),0);
 ////                              sms.sendTextMessage(destinationAddress, scAddress, text, sentIntent, deliveryIntent);
 //                              sms.sendTextMessage(personal[1], null, "Text123",mPI , null);
-                            break;
+                                break;
 
-                        case 3://XMPP
-                            Intent it4 = new Intent();
-                            it4.setClass(Map.this, login.class);
-                            startActivity(it4);
-                            break;
+                            case 3://XMPP
+//                                Intent it4 = new Intent();
+//                                it4.setClass(Map.this, login.class);
+//                                startActivity(it4);
+                                break;
 
-                        case 4://Hangouts
-                            Uri uri4 = Uri.parse("https://talkgadget.google.com/hangouts/extras/talk.google.com/myhangout");
-                            Intent it6 = new Intent(Intent.ACTION_VIEW, uri4);
-                            startActivity(it6);
-                            break;
+                            case 4://Hangouts
+//                                Uri uri4 = Uri.parse("https://talkgadget.google.com/hangouts/extras/talk.google.com/myhangout");
+//                                Intent it6 = new Intent(Intent.ACTION_VIEW, uri4);
+//                                startActivity(it6);
+                                break;
 
-                        case 5://導航
+                            case 5://導航
+//
+//                                //從點取視窗的資訊把緯度經度取出來轉成DOUBLE型態
+//                                Double Endlat = Double.parseDouble(personal[0]);
+//                                Double Endlng = Double.parseDouble(personal[1]);
+//                                Uri uri3 = Uri.parse("http://maps.google.com/maps?f=d&saddr=" + tdLat + "," + tdLon + "&daddr=" + Endlat + "," + Endlng);
+//
+//                                Intent it5 = new Intent(Intent.ACTION_VIEW, uri3);
+//                                startActivity(it5);
+                                break;
 
-                            //從點取視窗的資訊把緯度經度取出來轉成DOUBLE型態
-                            Double Endlat = Double.parseDouble(personal[0]);
-                            Double Endlng = Double.parseDouble(personal[1]);
-                            Uri uri3 = Uri.parse("http://maps.google.com/maps?f=d&saddr=" + tdLat + "," + tdLon + "&daddr=" + Endlat + "," + Endlng);
-
-                            Intent it5 = new Intent(Intent.ACTION_VIEW, uri3);
-                            startActivity(it5);
-                            break;
-
+                        }
                     }
-                }
-            });
+                });
 
-
-            // 建立按下取消什麼事情都不做的事件
-            DialogInterface.OnClickListener OkClick = new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                }
-            };
-//                MyListAlertDialog.setItems(ListStr, ListClick);
-            MyListAlertDialog.setNeutralButton(getString(R.string.dcan), OkClick);
-            MyListAlertDialog.show();
-        }
-
-    };
-
-//////////////////   thread的工作內容  ////////////////////////    
-    //query Data From MySQL 的實際動作項目內容
-//        private Runnable queryData=new Runnable () {
-//            public void run() {
-//            // TODO Auto-generated method stub
-//                try{
-//                    SQLPHP=GPSlist;
-//                    HttpClient client = new DefaultHttpClient();
-//                    HttpGet get =  new HttpGet("http://"+SQLPHP+"Carq2.php"); 
-//                    HttpResponse response = client.execute(get);
-//                    HttpEntity entity = response.getEntity();
-//                    String responseText = EntityUtils.toString(entity,"utf-8");
-//                    pageData = responseText; //把整個網頁資料給變數pageData
-////                    Log.d("AllPagedate",pageData);
-//                }
-//                catch (Exception ee){
-//                }   
-//            }
-//        };          
-
-    //query Data From SQLlite 的實際動作項目內容
-    private Runnable querySQLiteData = new Runnable() {
-        public void run() {
-            // TODO Auto-generated method stub
-            try {
-
-                Cursor GPSHelpc = null;
-                GPSHelpc = gpsHelp.query(true, DB_TABLE31, new String[]{"userid", "name", "Lan", "Lng", "Tel", "Email", "Lasttime"}, null, null, null, null, null, null);
-                if (GPSHelpc == null) {
-                    return;
-                }
-                if (GPSHelpc.getCount() == 0) {
-
-                    Toast.makeText(Map.this, getString(R.string.msg_no_data), Toast.LENGTH_SHORT).show();
-                } else {
-                    int rows_num = GPSHelpc.getCount(); //取得資料表列數
-                    GPSHelpc.moveToFirst();//查詢完SQLlite會位於最後.要重新移到最前取值
-                    String TempSQL;
-                    StringBuffer SQLiteDataB = new StringBuffer();
-                    for (int i = 0; i < rows_num; i++) {
-                        //把SQLite查詢到的資料給變數TempSQL
-                        TempSQL = GPSHelpc.getString(0) + "," + GPSHelpc.getString(1) + "," + GPSHelpc.getString(2) + "," + GPSHelpc.getString(3) + "," + GPSHelpc.getString(4) + "," + GPSHelpc.getString(5) + "," + GPSHelpc.getString(6) + "\n";
-                        //Log.d("WoWTempSQL", TempSQL);
-                        //利用StringBuffer連加String
-                        SQLiteDataB.append(TempSQL);
-                        GPSHelpc.moveToNext();   //將指標移至下一筆資料
+                alertDialog.setNeutralButton(getString(R.string.dcan), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
                     }
-                    //將StringBuffer轉給SQLiteData
-                    SQLiteData = SQLiteDataB.toString();
-
-//                        SQLiteData=GPSHelpc.getString(0)+","+GPSHelpc.getString(1)+","+GPSHelpc.getString(2)+","+GPSHelpc.getString(3)+","+GPSHelpc.getString(4)+","+GPSHelpc.getString(5)+","+GPSHelpc.getString(6)+"\n"; 
-//                      Log.d("WoWSQLiteDataWoW", SQLiteData);
-//                    while (GPSHelpc.moveToNext())
-//                    {
-//                        SQLiteData=GPSHelpc.getString(0)+","+GPSHelpc.getString(1)+","+GPSHelpc.getString(2)+","+GPSHelpc.getString(3)+","+GPSHelpc.getString(4)+","+GPSHelpc.getString(5)+","+GPSHelpc.getString(6)+"\n"; 
-//                        Log.d("NNNWoWSQLiteDataWoW", SQLiteData);
-//                    }    
-                }
-
-            } catch (Exception ee) {
+                });
+                alertDialog.show();
             }
-        }
-    };
-    //updateBosslocData 的實際動作項目內容
-    private Runnable updateBosslocData = new Runnable() {
-        public void run() {
-            // TODO Auto-generated method stub
-            try {
-                HttpClient client = new DefaultHttpClient();
-//                    SQLPHP=GPSlist;
-//                    HttpGet get =  new HttpGet("http://"+SQLPHP+"Caru2.php?a001="+newUpdate);
-                HttpGet get = new HttpGet("http://" + updataurl + "Caru2.php?a001=" + newUpdate);
-                Log.d("WWWWWupdateBosslocDataCCCCC", updataurl + "Caru2.php?a001=" + newUpdate);
-                client.execute(get);
-                Sqliteupdate();
-            } catch (Exception ee) {
-            }
-        }
-    };
-
-    //Sqliteupdatet 的實際動作項目內容
-    private Runnable Sqliteupdatet = new Runnable() {
-        public void run() {
-            // TODO Auto-generated method stub
-            SQLiteSuc = false;
-            try {
-//                    SQLPHP=GPSlist;
-//                    Log.d("AAAAAAAAAAAAAAAASQLPHPCCCCC", SQLPHP);
-                HttpClient client = new DefaultHttpClient();
-//                    HttpGet get =  new HttpGet("http://"+SQLPHP+"Carq2.php");
-//                  HttpGet get =  new HttpGet("http://"+SQLPHP+"Carq2.php");
-                HttpGet get = new HttpGet("http://" + updataurl + "Carq2.php");
-                Log.d("SqliteupdatetCCCCC", updataurl + "Carq2.php");
-                HttpResponse response = client.execute(get);
-                HttpEntity entity = response.getEntity();
-                String responseText = EntityUtils.toString(entity, "utf-8");
-                pageData = responseText; //把整個網頁資料給變數pageData
-                client.execute(get);
-
-                SQLiteSuc = true;
-            } catch (Exception ee) {
-            }
-        }
-    };
-
-    /////////////////////////////////////////////////////////////////
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        //移除臨時工的工作
-        if (mThreadHandler != null) {
-            mThreadHandler.removeCallbacks(querySQLiteData);
-            mThreadHandler.removeCallbacks(Sqliteupdatet);
-            mThreadHandler.removeCallbacks(updateBosslocData);
-//                mThreadHandler.removeCallbacks(queryData);
-        }
-        //解聘臨時工 (關閉Thread)
-        if (mThread != null) {
-            mThread.quit();
-        }
+        });
+        return child;
     }
-} 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mEmployees.setAdapter(new EmployeeAdapter(getContext()));
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+}

@@ -101,7 +101,7 @@ public class FunctionFragment extends Fragment {
         advanced.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                setFragment(new Map());
+                setFragment(new TrafficWardenMapFragment());
             }
         });
 
